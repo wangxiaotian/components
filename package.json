@@ -1,0 +1,26 @@
+{
+  "name": "components",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangxiaotian/components.git"
+  },
+  "author": "tianyun",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wangxiaotian/components/issues"
+  },
+  "homepage": "https://github.com/wangxiaotian/components#readme",
+  "devDependencies": {
+    "connect": "^3.6.0",
+    "gulp": "^3.9.1",
+    "gulp-connect": "^5.0.0",
+    "gulp-less": "^3.3.0",
+    "less": "^2.7.2"
+  }
+}
