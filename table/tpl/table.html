@@ -1,4 +1,4 @@
-<table class="table table-bordered">
+<table class="table table-bordered table-hover table-striped" style = "margin:0">
 	<thead>
 		<tr>
 			{{~ it.thData:item}}
@@ -10,8 +10,8 @@
 		{{~ it.trData:item}}
 		<tr>
 			{{ for(var prop in item){ }}
-				<td>{{= item[prop]}}</td>
-			{{ } }
+				<td>{{=item[prop]}}</td>
+			{{ } }}
 		</tr>
 		{{~}}
 	</tbody>
