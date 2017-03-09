@@ -1,0 +1,19 @@
+{
+    "data": {
+        "trData": [{
+            "name": "张三",
+            "job": "前端",
+            "phone": "110"
+        },{
+            "name": "张三",
+            "job": "前端",
+            "phone": "110"
+        },{
+            "name": "张三",
+            "job": "前端",
+            "phone": "110"
+        }]
+    },
+    "pageSize": 10,
+    "pageNumber": 1
+}

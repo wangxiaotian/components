@@ -1,0 +1,18 @@
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			{{~ it.thData:item}}
+			<th>{{=item}}</th>
+			{{~}}
+		</tr>
+	</thead>
+	<tbody>
+		{{~ it.trData:item}}
+		<tr>
+			{{ for(var prop in item){ }}
+				<td>{{= item[prop]}}</td>
+			{{ } }
+		</tr>
+		{{~}}
+	</tbody>
+</table>
