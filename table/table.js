@@ -60,17 +60,19 @@
             'pageNumber': 1
         }
     };
-    //	count page
-    XXtable.prototype.countPageNumber = function(num) {
+    //	calculate page data
+    XXtable.prototype.countPageNumber = function(totalNumber) {
         var self = this;
-        var _totalPage = num / self.pageInfo.pageSize;
+        var _totalPage = totalNumber / self.pageInfo.pageSize;
+        //	calculate total page, update
         self.pageInfo.totalPage = Math.ceil(_totalPage);
     };
-    //	分页渲染
+    //	分页框架渲染
     XXtable.prototype.addPaginationDom = function() {
         var self = this,
             _totalPage = self.pageInfo.totalPage,
-            _str = '<li><a href="#">&laquo;</a></li>';
+            _arrStr = '',
+            _arr_str = [];
         //	render pageSize
         var _strPageSize = '<div class = "col-xs-1" style = "padding:0px;">\
 								<div class="btn-group page_size">\
@@ -98,15 +100,38 @@
         _el_footer.html('');
         _el_footer.append($(_strPageSize));
         //	render page
+        self.updatePageDom();
+    };
+    //	分页结构更新
+    XXtable.prototype.updatePageDom = function() {
+        var self = this,
+            _totalPage = self.pageInfo.totalPage,
+            _arrStr = '',
+            _arr_str = [];
+        //	render page
         if (_totalPage <= 7) {
             for (var i = 0; i < _totalPage; i++) {
-                _str += '<li><a href="#">' + (i + 1) + '</a></li>';
+                _arr_str[i] = '<li><a href="#">' + (i + 1) + '</a></li>';
             }
+        } else {
+            for (var i = 0; i < 5; i++) {
+                _arr_str[i] = '<li><a href="#">' + (i + 1) + '</a></li>';
+            }
+            _arr_str.push('<li><a href="#">...</a></li>');
+            _arr_str.push('<li><a href="#">' + _totalPage + '</a></li>');
         }
-        _str += '<li><a href="#">&raquo;</a></li>';
+        _arr_str.push('<li><a href="#">&raquo;</a></li>');
+        _arr_str.unshift('<li><a href="#">&laquo;</a></li>');
+        $.each(_arr_str, function(index, val) {
+            _arrStr += val;
+        })
+
         var _el = $('.page_page .pagination');
         _el.html('');
-        _el.append($(_str));
+        var _arrStr = $(_arrStr);
+        _arrStr.eq(0).addClass('disabled');
+        _arrStr.eq(1).addClass('active');
+        _el.append(_arrStr);
     };
     //	初始化组件渲染
     XXtable.prototype.initStatus = function() {
@@ -121,8 +146,10 @@
                 res.data.thData = self.thData;
                 self.render(res.data);
                 self.countPageNumber(res.totalNumber);
+                //	渲染分页结构
                 self.addPaginationDom();
                 self.pagination_size();
+                self.pagination_page();
             });
         }
         //	更新数据
@@ -153,10 +180,130 @@
     //	选择页数分页
     XXtable.prototype.pagination_page = function() {
         var self = this,
-        	_page_ul = $('.XX-table').find('.pagination');
-        _page_ul.find('li').on('click',function(){
-        	
+            _page_ul = $('.XX-table').find('.pagination');
+        _page_ul.find('li').on('click', function() {
+            var _currPage = parseInt(self.pageInfo.pageNumber),
+                _el = $(this).parent().find('li'),
+                _index = parseInt($(this).index()),
+                _text = $(this).text();
+            if ($(this).hasClass('disabled')) {
+                //	不可点击
+                return;
+            } else {
+                //	点击页数
+                //	点击按钮
+                if (_index === 0) {
+                    _currPage = _currPage - 1;
+                } else {
+                    if (_index === parseInt(_el.length) - 1) {
+                        _currPage = _currPage + 1;
+                    } else {
+                        if (_index !== 0 && _index !== 8) {
+                            _currPage = _text;
+                        }
+                    }
+                }
+            }
+            self.pageInfo.pageNumber = _currPage;
+            self.pagination_disabled(self.pageInfo.pageNumber, _el);
+            self.pagination_dom_update(self.pageInfo.pageNumber, _index, _el);
+            self.updatePage();
+            self.update(self.pageInfo,function(res){
+            	res.data.thData = self.thData;
+                self.render(res.data);
+            })
         })
+    };
+    //	分页不可点击
+    XXtable.prototype.pagination_disabled = function(currPage, el) {
+        var self = this;
+        var _currPage = currPage,
+            _el = el,
+            l = parseInt(_el.length) - 1;
+        if (_currPage == 1) {
+            _el.eq(0).addClass('disabled');
+        }
+        if (_currPage != 1) {
+            _el.eq(0).removeClass('disabled');
+        }
+        if (_currPage >= self.pageInfo.totalPage) {
+            _el.eq(l).addClass('disabled');
+        }
+        if (_currPage != self.pageInfo.totalPage) {
+            _el.eq(l).removeClass('disabled');
+        }
+    };
+    //	分页样式添加
+    XXtable.prototype.pagination_style = function(currPage, index, el) {
+        var self = this;
+        //	样式只添加在当前页
+        el.each(function(index, el) {
+            var _text = $(this).find('a').text();
+            $(this).removeClass('active');
+
+            if (parseInt(_text) === parseInt(currPage)) {
+                $(this).addClass('active');
+            }
+        })
+    };
+    //	只更新分页dom,不更新分页数据
+    XXtable.prototype.pagination_dom_update = function(currPage, index, el) {
+        var self = this;
+        currPage = parseInt(currPage);
+        var that = el;
+        el.each(function(index, el) {
+            if (index == 0 || index == parseInt(that.length) - 1) {
+                return true;
+            }
+            $(this).removeClass('disabled');
+        })
+        if (self.pageInfo.totalPage <= 7) {
+            self.pagination_style(currPage, index, el);
+            return;
+        };
+        //	dom只更新，不重绘
+        if (currPage <= 4) {
+            el.eq(6).addClass('disabled');
+            el.eq(6).find('a').text('...');
+            el.eq(5).find('a').text(5);
+            el.eq(4).find('a').text(4);
+            el.eq(3).find('a').text(3);
+            el.eq(2).find('a').text(2);
+            self.pagination_style(currPage, index, el);
+            return;
+        }
+        if (currPage === self.pageInfo.totalPage) {
+            el.eq(6).find('a').text(currPage - 1);
+            el.eq(5).find('a').text(currPage - 2);
+            el.eq(4).find('a').text(currPage - 3);
+            el.eq(3).addClass('disabled');
+            el.eq(3).find('a').text('...');
+            el.eq(2).find('a').text(2);
+            self.pagination_style(currPage, index, el);
+        }
+        if ((currPage + 3) < self.pageInfo.totalPage) {
+            el.eq(6).find('a').text('...');
+            el.eq(6).addClass('disabled');
+            el.eq(5).find('a').text(currPage + 1);
+            el.eq(4).find('a').text(currPage);
+            el.eq(3).find('a').text(currPage - 1);
+            el.eq(2).find('a').text('...');
+            el.eq(2).addClass('disabled');
+            self.pagination_style(currPage, index, el);
+        }
+        if ((currPage + 3) == self.pageInfo.totalPage) {
+            el.eq(6).find('a').text(currPage + 2);
+            el.eq(5).find('a').text(currPage + 1);
+            el.eq(4).find('a').text(currPage);
+            el.eq(3).find('a').text(currPage - 1);
+            el.eq(2).find('a').text('...');
+            el.eq(2).addClass('disabled');
+            self.pagination_style(currPage, index, el);
+        }
+        if ((currPage + 3) > self.pageInfo.totalPage) {
+            self.pagination_style(currPage, index, el);
+            el.eq(2).addClass('disabled');
+        }
     };
     //	选择每页数量分页
     XXtable.prototype.pagination_size = function() {
@@ -168,16 +315,35 @@
             _page_size.find('button .size').text(_num);
             //	更新
             self.pageInfo.pageSize = _num;
+            self.pageInfo.pageNumber = 1;
             self.update(self.pageInfo, function(res) {
                 res.data.thData = self.thData;
                 self.render(res.data);
+                //	calculate
+                self.countPageNumber(res.totalNumber);
+                //	分页只更新，不重绘
+                self.updatePage();
+                self.updatePageDom();
+                self.pagination_page();
             })
         })
+    };
+    //	updatePage
+    XXtable.prototype.updatePage = function() {
+        var self = this,
+            _totalPageEl = $('.XX-table').find('.total'),
+            _currPageEl = $('.XX-table').find('.currPage');
+        //	更新总页数
+        _totalPageEl.text(self.pageInfo.totalPage);
+        //	更新当前页
+        _currPageEl.text(self.pageInfo.pageNumber);
     };
     window.xxtable = {
         init: function(options) {
             var xxtable = new XXtable();
             xxtable.init(options);
         }
-    }
+    };
+
+
 })()
