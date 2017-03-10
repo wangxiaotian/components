@@ -4,6 +4,10 @@
 			{{~ it.thData:item}}
 			<th>{{=item}}</th>
 			{{~}} 
+
+			{{? it.opsData.length > 0}}
+			<th>操作
+			{{?}}
 		</tr>
 	</thead>
 	<tbody>
@@ -14,5 +18,15 @@
 			{{ } }}
 		</tr>
 		{{~}}
+
+		{{? it.opsData.length > 0}}
+		{{~ it.opsData:item2}}
+		<tr>
+			{{for(var prop in item2){ }}
+				<td>{{=item2[prop]}}</td>
+			{{ } }}
+		</tr>
+		{{~}}
+		{{?}}
 	</tbody>
 </table>

@@ -9,6 +9,7 @@
     XXtable.prototype.configuration = {
         container: '',
         url: '',
+        operations: [],
         thRow: [{
             'name': 'name',
             'alias': '姓名',
@@ -28,6 +29,8 @@
         self.initFrame();
         //	初始化分页配置
         self.pageConfig();
+        //	初始化操作配置
+        self.addOperation();
         //	初始化状态
         self.initStatus();
 
@@ -50,6 +53,16 @@
         self.$container.append($(str));
         self.tableContainer = $('.XX-table').find('.table-body');
         self.tableFooter = $('.XX-table').find('.table-footer');
+    };
+    //	增加表格操作
+    XXtable.prototype.addOperation = function(){
+    	var self = this;
+    	var $ops = [];
+    	$.each(self.operations,function(index,val){
+    		var str = '<a href = "#">' + val.name + '</a>';
+    		$ops.push(str);
+    	})
+    	self.opsData = $ops;
     };
     //	分页信息配置
     XXtable.prototype.pageConfig = function() {
@@ -144,6 +157,7 @@
                 //	第一次渲染
             self.update(self.pageInfo, function(res) {
                 res.data.thData = self.thData;
+                res.data.opsData = self.opsData;
                 self.render(res.data);
                 self.countPageNumber(res.totalNumber);
                 //	渲染分页结构
@@ -210,6 +224,7 @@
             self.updatePage();
             self.update(self.pageInfo,function(res){
             	res.data.thData = self.thData;
+            	res.data.opsData = self.opsData;
                 self.render(res.data);
             })
         })
@@ -318,6 +333,7 @@
             self.pageInfo.pageNumber = 1;
             self.update(self.pageInfo, function(res) {
                 res.data.thData = self.thData;
+                res.data.opsData = self.opsData;
                 self.render(res.data);
                 //	calculate
                 self.countPageNumber(res.totalNumber);

@@ -12,7 +12,7 @@
     <script src="/lib/util.js"></script>
     <script src="table.js"></script>
 </head> 
- 
+  
 <body>
     <div class="container">
         <div class="row">
@@ -30,9 +30,23 @@
     </div>
     <script>
     $(function() {
+        var ops = [];
+        ops.push({
+            name: '查看',
+            todo: function(){
+                alert('hah')
+            }
+        })
+        ops.push({
+            name: '编辑',
+            todo: function(){
+                alert('heh')
+            }
+        })
         xxtable.init({
             container: '.table1',
             url: '/table/api/table.json',
+            operations: ops,
             thRow: [{
                 'name': 'name',
                 'alias': '姓名',
