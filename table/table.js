@@ -1,4 +1,30 @@
-/*
+/**
+ * 表格组件
+ * @example
+		var table = xxtable.init({
+	        container: '.table1',
+	        url: '/table/api/table.json',
+	        //	配置表格操作
+	        operations: [
+				{
+		            name: '编辑',
+		            todo: function(){
+		                alert('heh')
+            	}
+	        ],
+	        //	配置每一列的信息
+	        cols: [{
+	            'name': 'name',
+	            'alias': '姓名',
+	        }, {
+	            'name': 'job',
+	            'alias': '工作'
+	        }, {
+	            'name': 'phone',
+	            'alias': '电话'
+	        }]
+    	})
+
  * @module xxtable
  * @author ky
  */
@@ -10,7 +36,7 @@
         container: '',
         url: '',
         operations: [],
-        thRow: [{
+        cols: [{
             'name': 'name',
             'alias': '姓名',
         }, {
@@ -18,7 +44,7 @@
             'alias': '工作'
         }, {
             'name': 'phone',
-            'alisa': '电话'
+            'alias': '电话'
         }]
     };
     XXtable.prototype.init = function(options) {
@@ -33,7 +59,6 @@
         self.addOperation();
         //	初始化状态
         self.initStatus();
-
     };
     //	初始化组件结构
     XXtable.prototype.initFrame = function() {
@@ -53,32 +78,6 @@
         self.$container.append($(str));
         self.tableContainer = $('.XX-table').find('.table-body');
         self.tableFooter = $('.XX-table').find('.table-footer');
-    };
-    //	增加表格操作
-    XXtable.prototype.addOperation = function(){
-    	var self = this;
-    	var $ops = [];
-    	$.each(self.operations,function(index,val){
-    		var str = '<a href = "#">' + val.name + '</a>';
-    		$ops.push(str);
-    	})
-    	self.opsData = $ops;
-    };
-    //	分页信息配置
-    XXtable.prototype.pageConfig = function() {
-        var self = this;
-        self.pageInfo = {
-            'url': self.url,
-            'pageSize': 10,
-            'pageNumber': 1
-        }
-    };
-    //	calculate page data
-    XXtable.prototype.countPageNumber = function(totalNumber) {
-        var self = this;
-        var _totalPage = totalNumber / self.pageInfo.pageSize;
-        //	calculate total page, update
-        self.pageInfo.totalPage = Math.ceil(_totalPage);
     };
     //	分页框架渲染
     XXtable.prototype.addPaginationDom = function() {
@@ -115,6 +114,51 @@
         //	render page
         self.updatePageDom();
     };
+    //	增加表格操作
+    XXtable.prototype.addOperation = function() {
+        var self = this;
+        var $ops = [];
+        $.each(self.operations, function(index, val) {
+            var str = '<a href = "#" style = "min-width:50px;display:inline-block" class = "operation-' + index + '">' + val.name + '</a>';
+            $ops.push(str);
+            self.$container.on('click', '.operation-' + index, function() {
+                var that = this;
+                val.todo(that);
+            })
+        })
+        self.opsData = $ops;
+    };
+    //	分页信息配置
+    XXtable.prototype.pageConfig = function() {
+        var self = this;
+        self.pageInfo = {
+            'url': self.url,
+            'pageSize': 10,
+            'pageNumber': 1
+            // 'totalNumber': 
+            // 'totalPage' :
+        }
+    };
+    //	初始化组件渲染
+    XXtable.prototype.initStatus = function() {
+        var self = this;
+            //	第一次渲染
+        self.getData(self.pageInfo, function(data) {
+            self.render(data);
+            self.countPageNumber(self.pageInfo.totalNumber);
+            //	渲染分页结构
+            self.addPaginationDom();
+            self.pagination_size();
+            self.pagination_page();
+        });
+    };
+    //	计算总页数
+    XXtable.prototype.countPageNumber = function(totalNumber) {
+        var self = this;
+        var _totalPage = totalNumber / self.pageInfo.pageSize;
+        //	calculate total page, update
+        self.pageInfo.totalPage = Math.ceil(_totalPage);
+    };
     //	分页结构更新
     XXtable.prototype.updatePageDom = function() {
         var self = this,
@@ -146,28 +190,9 @@
         _arrStr.eq(1).addClass('active');
         _el.append(_arrStr);
     };
-    //	初始化组件渲染
-    XXtable.prototype.initStatus = function() {
-            var self = this;
-            //	取表头数据
-            self.thData = [];
-            $.each(self.thRow, function(index, value) {
-                    self.thData.push(value.alias);
-                })
-                //	第一次渲染
-            self.update(self.pageInfo, function(res) {
-                res.data.thData = self.thData;
-                res.data.opsData = self.opsData;
-                self.render(res.data);
-                self.countPageNumber(res.totalNumber);
-                //	渲染分页结构
-                self.addPaginationDom();
-                self.pagination_size();
-                self.pagination_page();
-            });
-        }
-        //	更新数据
-    XXtable.prototype.update = function(params, cb) {
+    
+    //	获取数据
+    XXtable.prototype.getData = function(params, cb) {
         var self = this;
         var url = params.url,
             data = {
@@ -175,9 +200,35 @@
                 'pageNumber': params.pageNumber
             };
         Utils.getData(url, data, function(res) {
-            cb(res);
+        	self.dealData(res);
+            cb(self.renderData);
         })
-
+    };
+    XXtable.prototype.dealData = function(res){
+    	var self = this,
+    		rawData = res.data.trData,
+    		thData = [],
+    		trData = [];
+    	self.pageInfo.totalNumber = res.totalNumber;
+    	//	获取表头数据
+    	$.each(self.cols,function(index,cols){
+    		thData.push(cols.alias);
+    	})
+    	//	获取表格体数据
+    	$.each(rawData,function(index,raw){
+    		//	每一行的数据
+    		var rawDataItem = [];
+    		$.each(self.cols,function(index,cols){
+    			var value = raw[cols.name];
+    			rawDataItem.push(value);
+    		})
+    		trData.push(rawDataItem);
+    	})
+    	self.renderData = {
+    		thData: thData,
+    		trData: trData,
+    		opsData: self.opsData
+    	}
     };
     //	渲染
     XXtable.prototype.render = function(data) {
@@ -189,7 +240,6 @@
                 container: self.tableContainer
             })
         })
-
     };
     //	选择页数分页
     XXtable.prototype.pagination_page = function() {
@@ -222,10 +272,8 @@
             self.pagination_disabled(self.pageInfo.pageNumber, _el);
             self.pagination_dom_update(self.pageInfo.pageNumber, _index, _el);
             self.updatePage();
-            self.update(self.pageInfo,function(res){
-            	res.data.thData = self.thData;
-            	res.data.opsData = self.opsData;
-                self.render(res.data);
+            self.getData(self.pageInfo, function(data) {
+                self.render(data);
             })
         })
     };
@@ -331,12 +379,10 @@
             //	更新
             self.pageInfo.pageSize = _num;
             self.pageInfo.pageNumber = 1;
-            self.update(self.pageInfo, function(res) {
-                res.data.thData = self.thData;
-                res.data.opsData = self.opsData;
-                self.render(res.data);
-                //	calculate
-                self.countPageNumber(res.totalNumber);
+            self.getData(self.pageInfo, function(data) {
+                self.render(data);
+                //	calculate 
+                self.countPageNumber(self.pageInfo.totalNumber);
                 //	分页只更新，不重绘
                 self.updatePage();
                 self.updatePageDom();
@@ -344,7 +390,7 @@
             })
         })
     };
-    //	updatePage
+    //	更新当前页及总页数
     XXtable.prototype.updatePage = function() {
         var self = this,
             _totalPageEl = $('.XX-table').find('.total'),
@@ -360,6 +406,5 @@
             xxtable.init(options);
         }
     };
-
-
 })()
+ 

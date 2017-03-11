@@ -6,27 +6,24 @@
 			{{~}} 
 
 			{{? it.opsData.length > 0}}
-			<th>操作
+			<th>操作</th>
 			{{?}}
 		</tr>
 	</thead>
 	<tbody>
-		{{~ it.trData:item}}
+		{{~ it.trData:row}}
 		<tr>
-			{{ for(var prop in item){ }}
-				<td>{{=item[prop]}}</td>
-			{{ } }}
+			{{~ row:item}}
+				<td>{{= item}}</td>
+			{{~}}
+			{{? it.opsData.length > 0}}
+				<td style = "width: 200px;">
+					{{~ it.opsData:item2}}
+						{{= item2}}
+					{{~}}
+				</td>
+			{{?}}
 		</tr>
 		{{~}}
-
-		{{? it.opsData.length > 0}}
-		{{~ it.opsData:item2}}
-		<tr>
-			{{for(var prop in item2){ }}
-				<td>{{=item2[prop]}}</td>
-			{{ } }}
-		</tr>
-		{{~}}
-		{{?}}
 	</tbody>
 </table>

@@ -33,14 +33,17 @@
         var ops = [];
         ops.push({
             name: '查看',
-            todo: function(){
-                alert('hah')
+            todo: function(that){
+                var that = that;
+                var index = $(that).parents('tr').index();
+                alert('hah ' + index)
             }
         })
         ops.push({
             name: '编辑',
             todo: function(){
-                alert('heh')
+                var index = $(this).index();
+                alert('heh' + index)
             }
         })
         xxtable.init({
