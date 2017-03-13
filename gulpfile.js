@@ -6,7 +6,8 @@ var connect = require('gulp-connect');
 gulp.task('connect',function(){
 	connect.server({
 		root: '',
-		livereload: true
+		livereload: true,
+		port: 3000
 	})
 })
 //	html热更新

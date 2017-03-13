@@ -24,6 +24,21 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
+                <form action="" role = "form" class = "form-horizontal table1-form">
+                    <div class="form-group">
+                        <label for="name" class = "control-label col-xs-1" style = "text-align:left">公司名</label>
+                        <div class="col-xs-3">
+                            <input type="text" name = "name" class = "form-control" placeholder="请输入公司名">
+                        </div>
+                        <div class="col-xs-2 pull-right" style = "text-align:right">
+                            <button type = "submit" class = "btn btn-primary table1-btn">查询</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
                 <div class="table1"></div>
             </div>
         </div>
@@ -59,7 +74,9 @@
             }, {
                 'name': 'phone',
                 'alias': '电话'
-            }]
+            }],
+            filterForm: '.table1-form',
+            filterBtn: '.table1-btn'
         })
     })
     </script>
