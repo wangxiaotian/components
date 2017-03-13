@@ -55,7 +55,12 @@
         //  筛选按钮
         filterBtn: '',
         //  筛选数据
-        filterData: {}
+        filterData: {},
+        dataCallback: function(res){
+            console.log('数据处理')
+            var data = res.data.trData;
+            return data;
+        }
     };
     XXtable.prototype.init = function(options) {
         var self = this;
@@ -247,9 +252,9 @@
     };
     XXtable.prototype.dealData = function(res) {
         var self = this,
-            rawData = res.data.trData,
             thData = [],
             trData = [];
+        var rawData = self.dataCallback(res);
         self.pageInfo.totalNumber = res.totalNumber;
         //  获取表头数据
         $.each(self.cols, function(index, cols) {

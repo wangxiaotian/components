@@ -76,7 +76,14 @@
                 'alias': '电话'
             }],
             filterForm: '.table1-form',
-            filterBtn: '.table1-btn'
+            filterBtn: '.table1-btn',
+            dataCallback: function(res){
+                var data = res.data.trData;
+                $.each(data,function(index,val){
+                    val.job = val.job + '<a href = "https://www.baidu.com">查看</a>';
+                })
+                return data;
+            }
         })
     })
     </script>
