@@ -105,7 +105,7 @@ gulp.task('replace',function(){
 })
 
 gulp.task('watch',function(){
-	gulp.watch(['./**/*.html'],['html','js','cssPack','replace'])
+	gulp.watch(['./**/*.html'],['html'])
 })
 
-gulp.task('server',['connect','watch','watch-less','js','css','scripts','replace']);
+gulp.task('server',['connect','watch']);
