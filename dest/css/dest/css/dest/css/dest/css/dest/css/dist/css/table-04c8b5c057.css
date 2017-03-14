@@ -1,0 +1,16 @@
+/* 分页 */
+.count{
+	padding:6px;
+}
+.count .page{
+	padding: 6px 12px;
+    line-height: 1.42857143;
+    text-decoration: none;
+    color: #428bca;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius:4px;
+}
+.count .total{
+	border:none;
+}

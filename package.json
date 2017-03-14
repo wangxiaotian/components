@@ -17,10 +17,18 @@
   },
   "homepage": "https://github.com/wangxiaotian/components#readme",
   "devDependencies": {
+    "browserify": "^14.1.0",
     "connect": "^3.6.0",
     "gulp": "^3.9.1",
     "gulp-connect": "^5.0.0",
     "gulp-less": "^3.3.0",
-    "less": "^2.7.2"
+    "gulp-minify-html": "^1.0.6",
+    "gulp-replace": "^0.5.4",
+    "gulp-rev": "^7.1.2",
+    "gulp-rev-collector": "^1.1.1",
+    "gulp-uglify": "^2.1.0",
+    "less": "^2.7.2",
+    "replace": "^0.3.0",
+    "through2": "^2.0.3"
   }
 }
