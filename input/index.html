@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>文本输入组件</title>
+	<link rel="stylesheet" href="/lib/css/bootstrap.min.css">
+    <script src="/lib/js/jquery.min.js"></script>
+    <script src="/lib/js/bootstrap.min.js"></script>
+    <script src="/lib/util.js"></script>
+    <script src = "input.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<h4>Input</h4>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6">
+				<input type="text" class = "input1" name = '' data-placeholder="请输入公司名" data-alias = "公司名">
+			</div>
+		</div>
+	</div>
+	<script>
+		$(function(){
+			//	初始化文本输入
+			xxinput.initText({
+				container: '.input1',
+				length: 8,
+				labelLength: 2,
+				postfix: '美元'
+			})
+		})
+	</script>
+</body>
+</html>

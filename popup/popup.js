@@ -50,7 +50,6 @@
 ;(function(){
 	var XXpopup = function(){};
 	XXpopup.prototype.configuration = {
-		container: '',
 		title: '提示',
 		body: 'body goes here',
 		//	弹窗类型：dialog/confirm/alert
@@ -59,7 +58,9 @@
 		btnText: '确定',		
 		btnCallback: function(){
 			console.log('回调处理');
-		}
+		},
+		//	此项无需配置
+		container: '#myModal-alert'
 	};
 	XXpopup.prototype.init = function(options){
 		var self = this;

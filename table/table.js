@@ -269,7 +269,7 @@
                 rawDataItem.push(value);
             })
             trData.push(rawDataItem);
-        })
+        }) 
         self.renderData = {
             thData: thData,
             trData: trData,
