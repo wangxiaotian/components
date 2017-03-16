@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head> 
 	<meta charset="UTF-8">
 	<title>文本输入组件</title>
 	<link rel="stylesheet" href="/lib/css/bootstrap.min.css">
     <script src="/lib/js/jquery.min.js"></script>
     <script src="/lib/js/bootstrap.min.js"></script>
+    <script src="/lib/js/doT.js"></script>
     <script src="/lib/util.js"></script>
     <script src = "input.js"></script>
 </head>
@@ -18,7 +19,15 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-6">
-				<input type="text" class = "input1" name = '' data-placeholder="请输入公司名" data-alias = "公司名">
+				<form action="" class = "form-horizontal">
+					<input type="text" class = "input1" name = '' data-placeholder="请输入公司名" data-alias = "公司名">
+				</form>
+				
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6">
+				<input type="text" class = "select1" data-alias = "部门">
 			</div>
 		</div>
 	</div>
@@ -30,6 +39,20 @@
 				length: 8,
 				labelLength: 2,
 				postfix: '美元'
+			})
+			//	下拉框初始化
+			xxinput.initSelect({
+				container: '.select1',
+				length: 8,
+				labelLength: 2,
+				dataSource: {
+					url: 'api/select.json'
+				},
+				defaultOption: '请选择部门',
+				dataCallback: function(res){
+					var data = res.data;
+					return data;
+				}
 			})
 		})
 	</script>
