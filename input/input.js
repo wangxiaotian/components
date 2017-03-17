@@ -43,7 +43,7 @@
 												<label for="" class="col-xs-' + self.labelLength + ' control-label">' + self.alias + '</label>\
 												<div class="col-xs-' + self.length + '">\
 													<div class="input-group">\
-														<input type="text" class="form-control" placeholder = "' + self.placeholder + '">\
+														<input type="text" name = "' + self.name + '" class="form-control" placeholder = "' + self.placeholder + '">\
 														<span class="input-group-addon">' + self.postfix + '</span>\
 													</div>\
 												</div>\
@@ -51,7 +51,7 @@
             var _htmlHorizontal = '<div class="form-group">\
 										<label for="" class="col-xs-' + self.labelLength + ' control-label">' + self.alias + '</label>\
 										<div class="col-xs-' + self.length + '">\
-											<input type="text" class="form-control" placeholder = "' + self.placeholder + '">\
+											<input type="text" name = "' + self.name + '" class="form-control" placeholder = "' + self.placeholder + '">\
 										</div>\
 									</div>';
             var _html = '';

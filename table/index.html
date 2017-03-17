@@ -42,7 +42,7 @@
             <div class="col-xs-12">
                 <div class="table1"></div>
             </div>
-        </div>
+        </div> 
     </div>
     <div class="modal fade" id="myModal-alert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -70,26 +70,13 @@
         </div>
         <!-- /.modal -->
     </div>
-    <button id="test">tst</button>
     <script>
     jQuery(function() {
-        var a = function(container,title,body){
-            var $modal = $(container),
-                $title = $(container).find('.modal-header').find('h4'),
-                $body = $(container).find('.modal-body');
-            $title.text(title);
-            $body.text(body);
-            $modal.modal('show');
-            console.log($('#a').length);
-        };
-        $('button').on('click', function() {
-            Utils.alert('#myModal-alert','提示','确定继续吗');
-        })
         /*Utils.alert('dialog', '提示', '确定要继续吗');*/
         var ops = [];
         ops.push({
             name: '查看',
-            todo: function(that) {
+            todo: function(that) { 
                 var that = that;
                 var index = $(that).parents('tr').index();
                 alert('hah ' + index)
@@ -99,23 +86,28 @@
             name: '编辑',
             todo: function() {
                 var index = $(this).index();
-                alert('heh' + index)
+                alert('heh' + index) 
             }
-        })
-        xxtable.init({
+        }) 
+        xxtable.init({ 
             container: '.table1',
             url: '/table/api/table.json',
             operations: ops,
-            thRow: [{
+            cols: [{
                 'name': 'name',
                 'alias': '姓名',
-            }, {
+                id: 'id'
+            }, { 
                 'name': 'job',
                 'alias': '工作'
             }, {
                 'name': 'phone',
                 'alias': '电话'
             }],
+            params: {
+                name: 'name',
+                id: 'id'
+            },
             filterForm: '.table1-form',
             filterBtn: '.table1-btn',
             dataCallback: function(res) {
