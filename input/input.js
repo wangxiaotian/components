@@ -1,7 +1,7 @@
 ;
 (function() {
     var XXinput = {};
-    //  文本输入框
+    //  文本输入框 
     (function() {
         var Text = XXinput.Text = function() {};
         Text.prototype.configuration = {
@@ -21,7 +21,6 @@
             labelLength: '',
             // 可读
             readonly: false
-
         };
         Text.prototype.init = function(options) {
             var self = this;
@@ -89,6 +88,11 @@
             alias: '',
             //  默认项
             defaultOption: '',
+            //  所需数据参数
+            params: {
+                name: "name",
+                id: "id"
+            },
             dataCallback: function(res) {
                 console.log('后台返回数据格式不能直接使用，需要自己配置数据格式并返回');
                 var data = res.data;
@@ -106,14 +110,15 @@
             var self = this;
             self.$container = $(self.container);
             self.alias = self.$container.data('alias');
+            self.name = self.$container.attr('name');
         };
         Select.prototype.initFrame = function() {
             var self = this;
             var _html = '<div class = "form-group">\
                             <label class = "control-label col-xs-' + self.labelLength + '">' + self.alias + '</label>\
                             <div class = "col-xs-' + self.length + '">\
-                                <select class = "form-control">\
-                                <option selected>' + self.defaultOption + '</option>\
+                                <select class = "form-control" name = "' + self.name + '">\
+                                <option value = "" selected>' + self.defaultOption + '</option>\
                                 <option class = "more-option"></option>\
                                 </select>\
                             </div>\
@@ -135,11 +140,26 @@
                     data = '';
                 Utils.getData(url, data, function(res) {
                     var data = self.dataCallback(res);
-                    self.render(data);
+                    var renderData = self.dealData(data);
+                    self.render(renderData);
                 })
             }
         };
-        //  渲染
+        //  数据处理
+        Select.prototype.dealData = function(res) {
+                //  给最后一层数据
+                var self = this,
+                    renderData = [];
+                $.each(res, function(index, val) {
+                    var item = {
+                        name: val[self.params.name],
+                        id: val[self.params.id]
+                    };
+                    renderData.push(item);
+                })
+                return renderData;
+            }
+            //  渲染
         Select.prototype.render = function(data) {
             var self = this;
             Utils.requireTpl('select', function(tpl) {
@@ -160,7 +180,11 @@
             //  表单提交地址
             action: '',
             //  提交按钮
-            submitBtn: ''
+            submitBtn: '',
+            //  提交后的回调
+            submitSuccess: function() {
+                console.log('提交后的回调')
+            }
         };
         Form.prototype.init = function(options) {
             var self = this;
@@ -176,6 +200,7 @@
         Form.prototype.getVal = function() {
             var self = this;
             var paramsStr = self.$container.serialize();
+            console.log(decodeURI(paramsStr));
             self.postData = Utils.paramsString2obj(paramsStr);
         };
         Form.prototype.submit = function() {
@@ -185,14 +210,18 @@
                 //  获取文本值
                 self.getVal();
                 console.log(typeof self.postData)
-                Utils.postData(self.action, self.postData, function(res) {
+                Utils.getData(self.action, self.postData, function(res) {
                     if (res.code == 0) {
                         xxpopup.init({
-                            container: '#myModal-alert',
-                            title: '提示',
-                            body: '提交成功！',
-                            type: 'dialog'
-                        })
+                                container: '#myModal-alert',
+                                title: '提示',
+                                body: '提交成功！',
+                                type: 'dialog',
+                                btnCallback: function() {
+                                    self.submitSuccess();
+                                }
+                            })
+                            //  self.submitSuccess();
                     } else {
                         xxpopup.init({
                             container: '#myModal-alert',
@@ -202,9 +231,116 @@
                         })
                     }
                 })
+                event.preventDefault();
+                return false;
             })
         }
-    })()
+    })();
+    //  通用级联
+    (function() {
+        var CascadeSelect = XXinput.CascadeSelect = function() {};
+        CascadeSelect.prototype.configuration = {
+            container: '',
+            parmas: [{
+                //  labelName
+                lableName: '',
+                //  默认选项
+                defaultOptions: '',
+                //  name属性
+                name: '',
+                //  选框长度
+                length: '',
+                //  label长度
+                labelLength: '',
+                //  数据源
+                dataSource: {
+                    url: '',
+                    data: []
+                },
+                params: {
+                    name: 'name',
+                    id: 'id'
+                },
+                dataCallback: function() {
+                    console.log('数据处理')
+                }
+            }]
+        };
+        CascadeSelect.prototype.init = function(options) {
+            var self = this;
+            $.extend(true, this, self.configuration, options)
+            self.initStatus();
+            self.getData();
+        };
+        CascadeSelect.prototype.initStatus = function() {
+            var self = this;
+            self.$container = $(self.container);
+            self.$select = self.$container.find('input');
+            self.sequence = 0;
+            self.initFrame();
+        };
+        CascadeSelect.prototype.initFrame = function() {
+            var self = this;
+            self.$select.each(function(index, ele) {
+                var _html = '<div class = "form-group">\
+                            <label class = "control-label col-xs-' + self.params[index].labelLength + '">' + self.params[index].labelName + '</label>\
+                            <div class = "col-xs-' + self.params[index].length + '">\
+                                <select class = "form-control" name = "' + self.params[index].name + '">\
+                                <option value = "" selected>' + self.params[index].defaultOption + '</option>\
+                                <option class = "more-option"></option>\
+                                </select>\
+                            </div>\
+                        </div>';
+                $(ele).replaceWith($(_html));
+            })
+            self.$unit = self.$container.find('.form-group');
+        };
+        //  默认渲染第一个下拉框
+        CascadeSelect.prototype.getData = function() {
+            var self = this,
+                url = self.params[self.sequence].dataSource.url,
+                data = '';
+            Utils.getData(url, data, function(res) {
+                var data = self.params[self.sequence].dataCallback(res);
+                var renderData = self.dealData(data);
+                self.render(renderData);
+            })
+        };
+        //  数据处理
+        CascadeSelect.prototype.dealData = function(res) {
+            //  给最后一层数据
+            var self = this,
+                renderData = [];
+            $.each(res, function(index, val) {
+                var item = {
+                    name: val[self.params[self.sequence].params.name],
+                    id: val[self.params[self.sequence].params.id]
+                };
+                renderData.push(item);
+            })
+            return renderData;
+        };
+        //  render
+        CascadeSelect.prototype.render = function(data) {
+            var self = this;
+            self.moreOption = self.$unit.eq(self.sequence).find('.more-option');
+            Utils.requireTpl('select', function(tpl) {
+                Utils.render({
+                    data: data,
+                    tpl: tpl,
+                    container: self.moreOption
+                }, true)
+            })
+        };
+        //  event
+        CascadeSelect.prototype.trigger = function(){
+            var self = this;
+            var _option = self.$unit.find('option');
+            self.$contaienr.on('click',_option,function(){
+                
+            })
+        }
+    })();
     window.xxinput = {
         initText: function(options) {
             var text = new XXinput.Text();
@@ -220,6 +356,11 @@
             var form = new XXinput.Form();
             form.init(options);
             return form;
+        },
+        initCascade: function(options) {
+            var cascade = new XXinput.CascadeSelect();
+            cascade.init(options);
+            return cascade;
         }
     }
 })()
