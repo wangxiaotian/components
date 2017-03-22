@@ -111,6 +111,10 @@
             self.$container = $(self.container);
             self.alias = self.$container.data('alias');
             self.name = self.$container.attr('name');
+            self.defaultItem = {
+                name: self.defaultOption,
+                id: 0
+            }
         };
         Select.prototype.initFrame = function() {
             var self = this;
@@ -118,14 +122,12 @@
                             <label class = "control-label col-xs-' + self.labelLength + '">' + self.alias + '</label>\
                             <div class = "col-xs-' + self.length + '">\
                                 <select class = "form-control" name = "' + self.name + '">\
-                                <option value = "" selected>' + self.defaultOption + '</option>\
-                                <option class = "more-option"></option>\
                                 </select>\
                             </div>\
                         </div>';
             var _selectHtml = $(_html);
             self.$container.replaceWith(_selectHtml);
-            self.moreOption = _selectHtml.find('.more-option')
+            self.$select = _selectHtml.find('select');
         };
         //  获取数据
         Select.prototype.getData = function() {
@@ -157,17 +159,18 @@
                     };
                     renderData.push(item);
                 })
+                renderData.unshift(self.defaultItem);
                 return renderData;
             }
-            //  渲染
+            //  渲染 
         Select.prototype.render = function(data) {
             var self = this;
             Utils.requireTpl('select', function(tpl) {
                 Utils.render({
                     data: data,
                     tpl: tpl,
-                    container: self.moreOption
-                }, true)
+                    container: self.$select
+                })
             })
         };
     })();
@@ -257,6 +260,7 @@
                     url: '',
                     data: []
                 },
+                //  处理数据所需参数
                 params: {
                     name: 'name',
                     id: 'id'
@@ -274,10 +278,18 @@
         };
         CascadeSelect.prototype.initStatus = function() {
             var self = this;
+            //  初始化序列
+            self.sequence = 0;
+            //  初始化postData
+            self.postData = {};
+            //  初始化取值
+            self.name = self.params[self.sequence].params.name;
+            self.id = self.params[self.sequence].params.id;
+            //  取dom对象
             self.$container = $(self.container);
             self.$select = self.$container.find('input');
-            self.sequence = 0;
             self.initFrame();
+            self.trigger();
         };
         CascadeSelect.prototype.initFrame = function() {
             var self = this;
@@ -286,8 +298,6 @@
                             <label class = "control-label col-xs-' + self.params[index].labelLength + '">' + self.params[index].labelName + '</label>\
                             <div class = "col-xs-' + self.params[index].length + '">\
                                 <select class = "form-control" name = "' + self.params[index].name + '">\
-                                <option value = "" selected>' + self.params[index].defaultOption + '</option>\
-                                <option class = "more-option"></option>\
                                 </select>\
                             </div>\
                         </div>';
@@ -299,7 +309,7 @@
         CascadeSelect.prototype.getData = function() {
             var self = this,
                 url = self.params[self.sequence].dataSource.url,
-                data = '';
+                data = self.postData;
             Utils.getData(url, data, function(res) {
                 var data = self.params[self.sequence].dataCallback(res);
                 var renderData = self.dealData(data);
@@ -311,13 +321,19 @@
             //  给最后一层数据
             var self = this,
                 renderData = [];
+            //  取默认项
+            self.$defaultItem = {
+                name: self.params[self.sequence].defaultOption,
+                id: 0
+            };
             $.each(res, function(index, val) {
                 var item = {
-                    name: val[self.params[self.sequence].params.name],
-                    id: val[self.params[self.sequence].params.id]
+                    name: val[self.name],
+                    id: val[self.id]
                 };
                 renderData.push(item);
             })
+            renderData.unshift(self.$defaultItem);
             return renderData;
         };
         //  render
@@ -328,18 +344,32 @@
                 Utils.render({
                     data: data,
                     tpl: tpl,
-                    container: self.moreOption
-                }, true)
+                    container: self.$unit.eq(self.sequence).find('select')
+                })
             })
         };
         //  event
-        CascadeSelect.prototype.trigger = function(){
-            var self = this;
-            var _option = self.$unit.find('option');
-            self.$contaienr.on('click',_option,function(){
-                
+        CascadeSelect.prototype.trigger = function() {
+            var self = this,
+                _unit = self.$unit.eq(self.sequence);
+            self.$unit.on('change', function() {
+                //  先更新索引
+                self.sequence = parseInt($(this).index()) + 1;
+                var _val = $(this).find('option:selected').attr('value'),
+                    _name = $(this).find('select').attr('name'),
+                    _nextUnit = self.$unit.eq(self.sequence);
+                if (_nextUnit) {
+                    if (self.sequence < self.$unit.length) {
+                        self.postData = {};
+                        self.postData[_name] = _val;
+                        self.getData();
+                    }
+
+                }
+
             })
-        }
+        };
+        //  renderNext
     })();
     window.xxinput = {
         initText: function(options) {

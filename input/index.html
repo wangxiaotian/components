@@ -171,27 +171,37 @@
                 }
             }, {
                 dataSource: {
-                    url: 'api/select.json'
+                    url: 'api/select2.json'
                 },
                 name: 'department',
                 length: 8,
                 labelLength: 4,
                 defaultOption: '请选择部门',
                 labelName: '部门',
-                dataCallback: function() {
-                    console.log('数据处理')
+                dataCallback: function(res) {
+                    var data = res.data.department;
+                    return data;
+                },
+                params: {
+                    name: 'name',
+                    id: 'id'
                 }
             }, {
                 dataSource: {
-                    url: 'api/select.json'
+                    url: 'api/select3.json'
                 },
                 name: 'user',
                 length: 8,
                 labelLength: 4,
                 defaultOption: '请选择人员',
                 labelName: '人员',
-                dataCallback: function() {
-                    console.log('数据处理')
+                dataCallback: function(res) {
+                    var data = res.data.user;
+                    return data;
+                },
+                params: {
+                    name: 'name',
+                    id: 'id'
                 }
             }]
         });
