@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>xmlHttpRequest</title>
+</head>
+<body>
+	<h3>js对象</h3>
+	<script>
+		var xhr = new XMLHttpRequest();
+		xhr.withCredentials = true;
+		xhr.responseType = 'json';
+		xhr.onreadystatechange = function(){
+			if(xhr.readyState == 4){
+				if(xhr.status >= 200 && xhr.status < 300 || xhr.status == 304){
+					console.log(xhr.getResponseHeader('Date'));
+					console.log(xhr.getAllResponseHeaders());
+					console.log(xhr.response)
+				}
+			}
+		}
+		xhr.open('get','../table/api/table.json',true);
+		xhr.setRequestHeader('MyHeader','awesome');
+		xhr.send(null);
+	</script>
+</body>
+</html>
