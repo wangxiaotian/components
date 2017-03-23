@@ -182,6 +182,8 @@
             container: '',
             //  表单提交地址
             action: '',
+            //  验证信息配置
+            validate: {},
             //  提交按钮
             submitBtn: '',
             //  提交后的回调
@@ -194,22 +196,46 @@
             $.extend(true, this, self.configuration, options);
             self.initStatus();
             self.submit();
+            self.initValidate();
+            self.initPlug();
         };
         Form.prototype.initStatus = function() {
             var self = this;
             self.$container = $(self.container);
             self.submitBtn = $(self.submitBtn);
         };
+        //  初始化插件
+        Form.prototype.initPlug = function(){
+            var self = this;
+            var rules = self.validate.rules,
+                messages = self.validate.messages;
+            self.validateFunc = self.$container.validate({
+                rules: rules,
+                messages: messages,
+                errorPlacement: function(error,element){
+                    error.appendTo(element.parent());
+                }
+            })
+        };
+        //  取值
         Form.prototype.getVal = function() {
             var self = this;
             var paramsStr = self.$container.serialize();
             console.log(decodeURI(paramsStr));
             self.postData = Utils.paramsString2obj(paramsStr);
         };
+        //  提交
         Form.prototype.submit = function() {
             var self = this;
             //  提交
             self.submitBtn.on('click', function(event) {
+                //  提交前先行验证
+                self.$container.valid();
+                var _aError = $('.error');
+                var error = self.error(_aError);
+                if(error){
+                    return;
+                }
                 //  获取文本值
                 self.getVal();
                 console.log(typeof self.postData)
@@ -237,6 +263,28 @@
                 event.preventDefault();
                 return false;
             })
+        }
+        Form.prototype.initValidate = function(){
+            var self = this;
+            /*
+             *  value：元素值，element，元素本身，param：参数
+            */
+            $.validator.addMethod('phone',function(value,element,params){
+                var reg = /[\d]/;
+                return reg.test(value);
+            },'电话号码不能输入数字');
+        }
+        Form.prototype.error = function(errorEl){
+            var self = this,
+                _error = false;
+            errorEl.each(function(index,ele){
+                var _text = $(ele).text();
+                if(_text){
+                    _error = true;
+                    return false;
+                }
+            })
+            return _error;
         }
     })();
     //  通用级联

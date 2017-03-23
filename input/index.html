@@ -7,10 +7,18 @@
     <link rel="stylesheet" href="/lib/css/bootstrap.min.css">
     <script src="/lib/js/jquery.min.js"></script>
     <script src="/lib/js/bootstrap.min.js"></script>
+    <script src="/lib/js/jquery.validate.min.js"></script>
     <script src="/lib/js/doT.js"></script>
     <script src="/lib/util.js"></script>
     <script src="../popup/popup.js"></script>
     <script src="input.js"></script>
+    <style>
+    .error {
+        color: red;
+        position: relative;
+        top: 10px;
+    }
+    </style>
 </head>
 
 <body>
@@ -86,6 +94,29 @@
                 </div>
             </form>
         </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3>表单验证</h3>
+            </div>
+        </div>
+        <div class="row">
+            <form action="" class="form-horizontal validate-form">
+                <input type="text" name="user" class="text1" data-placeholder="请输入姓名" data-alias="用户名">
+                <input type="number" name="jixiao" class="text2" data-placeholder="请输入数字" data-alias="绩效县">
+                <input type="tel" name="phone" class="text3" data-placeholder="请输入电话" data-alias="电话">
+                <input type="email" name="email" class="text4" data-placeholder="请输入邮箱" data-alias="邮箱">
+                <input type="password" name="pwd" class="text5" data-placeholder="请输入密码" data-alias="密码">
+                <input type="text" class="text6" data-placeholder="请输入姓名" name = "company" data-alias="公司">
+                <input type="text" class="text7" data-placeholder="请输入姓名" data-alias="用户名">
+                <input type="text" class="text8" data-placeholder="请输入姓名" data-alias="用户名">
+            </form>
+        </div>
+        <div class="row">
+            <div class="col-xs-offset-4"></div>
+            <div class="col-xs-1">
+                <button class="btn btn-primary btn-block form-btn">提交</button>
+            </div>
+        </div>
         <div class="modal fade" id="myModal-alert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -115,6 +146,8 @@
     </div>
     <script>
     $(function() {
+        document.cookie = 'name = test';
+        console.log(document.cookie);
         //  初始化文本输入
         xxinput.initText({
             container: '.input1',
@@ -205,51 +238,99 @@
                 }
             }]
         });
-        /*xxinput.initCascade({
-            container: '.cascade2',
-            params: [{
-                dataSource: {
-                    url: 'api/select.json'
-                },
-                name: 'company',
-                length: 8,
-                labelLength: 4,
-                defaultOption: '请选择公司',
-                labelName: '公司',
-                dataCallback: function(){
-                    console.log('数据处理')
-                }
-            },{
-                dataSource: {
-                    url: 'api/select.json'
-                },
-                name: 'department',
-                length: 8,
-                labelLength: 4, 
-                defaultOption: '请选择部门',
-                labelName: '部门',
-                dataCallback: function(){
-                    console.log('数据处理')
-                }
-            },{
-                dataSource: {
-                    url: 'api/select.json'
-                },
-                name: 'user',
-                length: 8,
-                labelLength: 4,
-                defaultOption: '请选择人员',
-                labelName: '人员',
-                dataCallback: function(){
-                    console.log('数据处理')
-                }
-            }]
-        })*/
         //  初始化表单
         xxinput.initForm({
             container: '.form1',
             action: 'api/select.json',
             submitBtn: '.submit',
+            submitSuccess: function() {
+                // window.location.href = '/table'
+            }
+        });
+        //  表单验证
+        xxinput.initText({
+            container: '.text1',
+            length: 4,
+            labelLength: 4
+        });
+        xxinput.initText({
+            container: '.text2',
+            length: 4,
+            labelLength: 4
+        });
+        xxinput.initText({
+            container: '.text3',
+            length: 4,
+            labelLength: 4
+        });
+        xxinput.initText({
+            container: '.text4',
+            length: 4,
+            labelLength: 4
+        });
+        xxinput.initText({
+            container: '.text5',
+            length: 4,
+            labelLength: 4
+        });
+        xxinput.initSelect({
+            container: '.text6',
+            length: 8,
+            labelLength: 2,
+            dataSource: {
+                url: 'api/select.json'
+            },
+            defaultOption: '请选择部门',
+            dataCallback: function(res) {
+                var data = res.data.companies;
+                return data;
+            },
+            params: {
+                name: "name",
+                id: "id"
+            }
+        });
+        xxinput.initText({
+            container: '.text7',
+            length: 4,
+            labelLength: 4
+        });
+        xxinput.initText({
+            container: '.text8',
+            length: 4,
+            labelLength: 4
+        });
+        //  初始化表单
+        xxinput.initForm({
+            container: '.validate-form',
+            action: 'api/select.json',
+            submitBtn: '.form-btn',
+            validate: {
+                rules: {
+                    jixiao: {
+                        required: true,
+                        maxlength: 4
+                    },
+                    phone: {
+                        required: true,
+                        phone: ''
+                    },
+                    email: 'required',
+                    pwd: 'required',
+                    company: 'required'
+                },
+                messages: {
+                    user: '请输入用户名',
+                    jixiao: {
+                        required: '请输入绩效',
+                        maxlength: '长度不能大于4个位数',
+                    },
+                    phone: '请输入电话',
+                    email: '请输入邮箱地址',
+                    pwd: '请输入密码',
+                    company: '请输入公司'
+                }
+            },
             submitSuccess: function() {
                 // window.location.href = '/table'
             }
