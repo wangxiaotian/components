@@ -12,8 +12,10 @@
         multiple: true,
         //	上传大小限制(暂以M为单位)
         maxSize: 1,
-        //	上传按钮
+        //	上传按钮(仅上传文件，不和其他数据一起提交)
         uploadBtn: '',
+        //  表单提交(包括其它的数据)
+        formBtn: '',
         //	name值
         name: '',
         //	上传地址
@@ -25,16 +27,14 @@
         //	失败回调
         error: function(){
 
-        },
-        //	需要提交的其他数据,对象类型
-        data: {}
+        }
     };
     Upload.prototype.init = function(options) {
         var self = this;
         $.extend(true, this, self.configuration, options);
         self.initStatus();
         self.initFrame();
-        self.submit();
+        self.submit_upload();
 
     };
     Upload.prototype.initStatus = function() {
@@ -71,7 +71,7 @@
             var _file = this.files[0];
             if (!_file) return;
             self.cache.push(_file);
-
+            self.getFile = self.cache;
             var _name = _file.name,
                 _size = _file.size;
             if (self.maxSize) {
@@ -80,9 +80,9 @@
                 }
             }
             var _postfix = _name.split('.').pop(),
-                _reg = /['png'|'jpg'|'gif'|'bmp'|'tiff'|'svg']/,
+                _imgPostfix = ['png','jpg','gif','bmp','tiff','svg'],
                 _type;
-            if (_reg.test(_postfix)) {
+            if (_imgPostfix.indexOf(_postfix) > -1) {
                 _type = 'img'
             } else {
                 _type = 'other'
@@ -139,24 +139,26 @@
             self._index = _list.index();
             self.cache.splice(self._index, 1);
             _list.remove();
+            self.getFile = self.cache;
         })
     };
-    //	上传
-    Upload.prototype.submit = function() {
+    //	只是文件上传
+    Upload.prototype.submit_upload = function() {
         var self = this;
         if (!self.$uploadBtn) return;
         self.$uploadBtn.on('click', function() {
-            var _files = self.cache;
-            if (_files.length < 0) return;
-            var _toString = Object.prototype.toString;
+            var _files = self.cache,
+                fd = new FormData();
+            fd.append(self.name,_files);
+            /*var _toString = Object.prototype.toString;
             if(_toString.call(self.data) !== '[object Object]') return;
-            self.data[self.name] = _files;
-
+            //  将上传文件数据添加到已有表单数据
+            self.data[self.name] = _files;*/
             $.ajax({
                 url: self.url,
-                type: 'POST',
+                type: 'GET',
                 cache: false,
-                data: self.data,
+                data: fd,
                 processData: false,
                 contentType: false,
                 success: function(res){

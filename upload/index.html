@@ -1,106 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
  
-<head>
+<head>  
     <meta charset="UTF-8">
     <title>upload</title>
     <link rel="stylesheet" href="/lib/css/bootstrap.min.css">
+    <link rel="stylesheet" href="upload.css">
     <script src="/lib/js/jquery.min.js"></script>
     <script src="/lib/js/bootstrap.min.js"></script>
     <script src="/lib/util.js"></script>
-    <style>
-    .file-list {
-        margin: 10px 0;
-        overflow: hidden;
-        border: 1px dashed #aaa;
-        padding: 10px 10px 0 10px;
-        border-radius: 5px;
-    }
-    
-    .file-list .list {
-    	position:relative;
-        width: 110px;
-        height: 110px;
-        border: 1px solid #aaa;
-        padding: 5px;
-        border-radius: 5px;
-        float: left;
-        margin: 0 20px 10px 0;
-        cursor:pointer;
-    }
-    .list .img-info{
-		position:absolute;
-		top:0;
-		left:0;
-		width:100%;
-		height:100%;
-    }
-    .list .img-info .img-name{
-    	position:absolute; 
-    	width:100%;
-    	bottom:0;
-    	text-align: center; 
-    	background:rgba(0, 0, 0, 0.6);
-    	color:white; 
-    	white-space: nowrap;
-    	text-overflow: ellipsis;
-    }
-    .list .img-info .img-delete{ 
-        position:absolute;
-        width:100%;
-        top:0;
-        left:0;
-        text-align: right;
-        
-    }
-    .list .img-info .img-delete i{
-        font-style: normal;
-        display:inline-block;
-        width:20px;
-        text-align: center;
-        background:rgba(0, 0, 0, 0.6);
-        color:white;
-    }
-    .file-list .list img {
-        width: 100%;
-    }
-    
-    .pick-upload {
-        display: inline-block;
-        margin-left:20px;
-    }
-    
-    .file-picker {
-        position: relative;
-        height: 34px;
-        width: 82px;
-        display: inline-block;
-    }
-    
-    .file-picker .pick {
-        width: 100%;
-        height: 100%;
-        cursor: pointer;
-    }
-    
-    .file-picker .file-input {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        overflow: hidden;
-        cursor: pointer;
-    }
-    
-    .file-picker .file-input input { 
-        opacity: 0;
-        display: inline-block; 
-        width: 100%;
-        height: 100%;
-        cursor: !important pointer;
-    }
-    </style>
     <script src = "upload.js"></script>
 </head>
 
@@ -167,12 +75,15 @@
     </div>
     <script>
     	$(function(){
-    		xxupload.init({
+    		var a = xxupload.init({
     			container: '.upload1',
                 name: 'file',
                 data: {name: 'nihao'},
-                uploadBtn: '.submit'
     		})
+            $('.submit').on('click',function(){
+                var getfile = a.getFile;
+                alert(getfile);
+            })
     	})
     </script>
 </body>
