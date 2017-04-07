@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>弹窗</title>
+    <link rel="stylesheet" href="/lib/css/bootstrap.min.css">
+    <link rel="stylesheet" href="layer.css">
+    <script src="/lib/js/jquery.min.js"></script>
+    <script src="/lib/js/bootstrap.min.js"></script>
+    <script src="/lib/util.js"></script>
+    <script src="layer.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3>Popup</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <a href="javascript:;" class="btn btn-primary">test</a>
+                <a href="javascript:;" class="btn test">hah</a>
+            </div>
+            <ul>
+                <li>asf</li>
+                <li>asf</li>
+                <li>asf</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+    $(function() {
+        $('.btn-primary').click(function() {
+            layer.open({
+                type: 1,
+                title: '分配需求',
+                closeBtn: 0,
+                shadeClose: true,
+                content: '<ul> <li> asf </li> <li> asf </li> <li> asf </li> </ul>',
+                area: ['500px', '300px']
+            })
+        })
+        $('.test').click(function(){
+            layer.open({
+                type: 1,
+                title: '分配需求',
+                closeBtn: 0,
+                shadeClose: true,
+                content: '<ul> <li> haha </li> <li> aheh </li> <li> hae </li> </ul>',
+                area: ['500px', '300px']
+            })
+        })
+    })
+    </script>
+</body>
+
+</html>
