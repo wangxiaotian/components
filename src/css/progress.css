@@ -1,0 +1,40 @@
+html {
+  height: 100%;
+}
+html body {
+  height: 100%;
+}
+html body .xxprogress {
+  width: 300px;
+  position: relative;
+}
+html body .xxprogress > p {
+  margin: 0px;
+}
+html body .xxprogress .progress-line {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: #ccc;
+  border-radius: 1000px;
+}
+html body .xxprogress .progress-line-active {
+  display: inline-block;
+  border-radius: 1000px;
+  background: green;
+  position: absolute;
+  left: 0;
+  top: 0px;
+}
+html body .xxprogress .progress-towage {
+  display: inline-block;
+  border-radius: 1000px;
+  cursor: pointer;
+  position: absolute;
+}
+html body .xxprogress .xx-percent {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  right: -60px;
+}
