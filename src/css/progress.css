@@ -37,4 +37,9 @@ html body .xxprogress .xx-percent {
   position: absolute;
   top: 0;
   right: -60px;
+  border: none;
+  width: 50px;
+  color: black;
+  text-align: center;
+  outline: none;
 }
