@@ -1,0 +1,57 @@
+{
+  "success": true,
+  "code": "200",
+  "message": null,
+  "data": {
+    "items": [{
+      "id": 5296,
+      "title": "精读《三国演义》",
+      "extContent": "{\"videoUrl\": \"http://teacher.jackmafoundation.org.cn/static/m/live.html?isApp=1&onlyPlayer=1&id=5296\", \"descUrl\": \"http://teacher.jackmafoundation.org.cn/static/m/live.html?isApp=1&onlyDetail=1&id=5296\", \"guests\": \"[{\\\"name\\\":\\\"\\u66f9\\u90c1\\u8001\\u5e08\\\",\\\"avatar_url\\\":\\\"https://teacher.jackmafoundation.org.cn/file/8c2b2486e6cbc2a8082f2c35d6f6a87a/\\\",\\\"introduction\\\":\\\"\\u7ecf\\u5178\\u5bfc\\u8bfb\\u4e13\\u5bb6\\\"}]\", \"cover_pic_url\": \"https://teacher.jackmafoundation.org.cn/file/56b1a11326f541def6c674899675c1a6/\", \"end_time\": 1493046000782, \"start_time\": 1493029800352}",
+      "ctime": 1492679446000,
+      "voteCount": 0,
+      "voted": false,
+      "isStared": false,
+      "content": "巧用思维导图读书法,精读《三国演义》",
+      "ownerUserInfo": {
+        "user_id": 3283,
+        "user_name": "ALIPAYzIW3JqqYn8",
+        "nick_name": "基金会小棉袄",
+        "avatar_url": "https://teacher.jackmafoundation.org.cn/file/3afac21c5c1907baa227f14d25863e3e/",
+        "level": 2,
+        "level_rank": "窝主",
+        "level_pic": "https://teacher.jackmafoundation.org.cn/static/img/profile/level_2.png",
+        "tags": [],
+        "isOfficialUser": true,
+        "relationType": 1,
+        "enrollTime": null
+      }
+    },{
+      "id": 5296,
+      "title": "精读《六国演义》精读《六国演义》精读《六国演义》精读《六国演义》精读《六国演义》",
+      "extContent": "{\"videoUrl\": \"http://teacher.jackmafoundation.org.cn/static/m/live.html?isApp=1&onlyPlayer=1&id=5296\", \"descUrl\": \"http://teacher.jackmafoundation.org.cn/static/m/live.html?isApp=1&onlyDetail=1&id=5296\", \"guests\": \"[{\\\"name\\\":\\\"\\u66f9\\u90c1\\u8001\\u5e08\\\",\\\"avatar_url\\\":\\\"https://teacher.jackmafoundation.org.cn/file/8c2b2486e6cbc2a8082f2c35d6f6a87a/\\\",\\\"introduction\\\":\\\"\\u7ecf\\u5178\\u5bfc\\u8bfb\\u4e13\\u5bb6\\\"}]\", \"cover_pic_url\": \"https://teacher.jackmafoundation.org.cn/file/56b1a11326f541def6c674899675c1a6/\", \"end_time\": 1493046000782, \"start_time\": 1493029800352}",
+      "ctime": 1492679446000,
+      "voteCount": 0,
+      "voted": false,
+      "isStared": false,
+      "content": "巧用思维导图读书法,精读《六国演义》",
+      "ownerUserInfo": {
+        "user_id": 3283,
+        "user_name": "ALIPAYzIW3JqqYn8",
+        "nick_name": "基金会大棉袄",
+        "avatar_url": "https://teacher.jackmafoundation.org.cn/file/3afac21c5c1907baa227f14d25863e3e/",
+        "level": 2,
+        "level_rank": "领主",
+        "level_pic": "https://teacher.jackmafoundation.org.cn/static/img/profile/level_2.png",
+        "tags": [],
+        "isOfficialUser": true,
+        "relationType": 1,
+        "enrollTime": null
+      }
+    }],
+    "totalPage": 1,
+    "currentPage": 1,
+    "pageSize": 10,
+    "totalSize": null
+  },
+  "requestId": null
+}
