@@ -50,13 +50,18 @@
             'name': 'phone',
             'alias': '电话'
         }],
+        //  表格渲染中需要携带的参数
+        params:{
+            name: 'name',
+            id: 'id'
+        },
         //  筛选表单
         filterForm: '',
         //  筛选按钮
         filterBtn: '',
         //  筛选数据
         filterData: {},
-        dataCallback: function(res){
+        dataCallback: function(res) {
             console.log('数据处理')
             var data = res.data.trData;
             return data;
@@ -177,8 +182,14 @@
         if (!$filterForm || !$filterBtn) {
             return;
         }
-        $filterBtn.on('click', function() {
+        $filterBtn.on('click', function(event) {
             //  序列化表单
+            var _input = $filterForm.find('input');
+            var _inputText = _input.val();
+            if (_input.length == 1 && _inputText.length < 1) {
+                event.preventDefault();
+                return false;
+            }
             self.filterData = $filterForm.serialize();
             self.dealFilter();
         })
@@ -254,6 +265,7 @@
         var self = this,
             thData = [],
             trData = [];
+        //  回调处理数据
         var rawData = self.dataCallback(res);
         self.pageInfo.totalNumber = res.totalNumber;
         //  获取表头数据
@@ -265,7 +277,12 @@
             //  每一行的数据
             var rawDataItem = [];
             $.each(self.cols, function(index, cols) {
-                var value = raw[cols.name];
+                var value = {
+                    name: raw[cols.name]
+                }
+                if(cols.id){
+                    value.id = raw[cols.id].toString();
+                }
                 rawDataItem.push(value);
             })
             trData.push(rawDataItem);

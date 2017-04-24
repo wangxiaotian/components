@@ -1,0 +1,37 @@
+<!DOCTYPE html>    
+<html lang="en">           
+<head>          
+	<meta charset="UTF-8">  
+	<title>progress</title> 
+	<link rel="stylesheet" href="/lib/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/src/css/progress.css">
+	<script src="/lib/js/jquery.min.js"></script>
+	<script src = "progress.js"></script>
+</head>   
+<body style = "padding:0 100px;">   
+	<h3 style = "margin:50px 0">progress</h3>
+	<div class="progress1"> 
+		<!-- <p class="progress-line"></p>
+		<span class="progress-towage"></span> -->
+	</div>
+	<div>
+		<p style = "padding:20px 0">串联</p>
+	</div>
+	<div class="progress2" style = "margin-top:50px;"></div>
+	<script>  
+		$(function(){
+			/*
+			 * 	事件中的变量内存不会被回收
+			*/
+			var a = progress.init({
+				container: '.progress1',
+				limit: 0.6,
+				defaultValue: '50%'
+			})
+			var b = progress.init({
+				container: '.progress2'
+			})
+		})
+	</script>
+</body>
+</html>

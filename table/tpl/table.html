@@ -9,12 +9,17 @@
 			<th>操作</th>
 			{{?}}
 		</tr>
-	</thead>
+	</thead> 
 	<tbody>
 		{{~ it.trData:row}}
 		<tr>
 			{{~ row:item}}
-				<td>{{= item}}</td>
+				{{? item.id}}
+					<td data-alias = "{{= item.id}}">{{= item.name}}</td>
+					{{??}}
+						<td>{{= item.name}}</td>
+				{{?}}
+				
 			{{~}}
 			{{? it.opsData.length > 0}}
 				<td style = "width: 200px;">

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <meta name="viewport" content="minimal-ui, width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <title>直播预告页面</title>
+    <link rel="stylesheet" href="styles/index.css"> 
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/vue.min.js"></script>
+    <script src="scripts/index.js"></script> 
+</head>
+
+<body> 
+    <div class="wrap" id="wrapper" :data-id="requestId">
+        <header>
+            <span class="share"><img src="/myun/0421/src/images/H5_04.png" alt=""></span>
+            <span class="order">第一期</span>
+            <span class="date-range">直播时间：{{info.min}}-{{info.max}}</span>
+            <img src="/myun/0421/src/images/H5_01.png" alt="">
+        </header>
+        <div class="main">
+            <ul>
+                <li>时间</li>
+                <li>直播内容</li>
+                <li>主讲人</li>
+            </ul>
+            <div class="main-list">
+                <div class="item" v-for="item in info.items" :data-id="item.id">
+                    <div class="date">
+                        <span class="day">{{item.monthDate}}</span>
+                        <span class="time">{{item.hourMinute}}</span>
+                    </div>
+                    <p class="title"><span>{{item.title}}</span></p>
+                    <div class="author">
+                        <span class="name" :data-id="item.ownerUserInfo.user_id">{{item.mainUser}}</span>
+                        <a :href="item.videoUrl" class="link"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer><img src="/myun/0421/src/images/H5_05.png" alt=""></footer>
+    </div>
+    <script>
+    $(function() {
+        var vm = new Vue({
+            el: '#wrapper',
+            data: {
+                info: '',
+                requestId: ''
+            },
+            methods: {
+                share: function() {
+                    alert('hah')
+                },
+                secondToTime: function(seconds) {
+                    var rawDate = seconds,
+                        curDate = new Date(rawDate);
+                    result = {};
+                    result.year = curDate.getFullYear();
+                    result.month = curDate.getMonth() + 1;
+                    result.date = curDate.getDate();
+                    result.hour = curDate.getHours();
+                    result.minute = curDate.getMinutes();
+                    result.second = curDate.getSeconds();
+                    result.minute = (result.minute).toString().length == 1 ? '0' + result.minute : result.minute;
+                    result.second = (result.second).toString().length == 1 ? '0' + result.second : result.second;
+                    return result;
+                },
+                getData: function() {
+                    var data = {
+                            "currentPage": "1",
+                            "ownerId": 103,
+                            "ownerType": "circle",
+                            "contentType": "YWC",
+                            "ext_type": "LIVE",
+                            "pageSize": 10,
+                            "orderByCtimeAsc":1
+                        },
+                        that = this,
+                        url = 'http://teacher.jackmafoundation.org.cn/api2/topic/findlistByIdAndType',
+                        _data = JSON.stringify(data);
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: _data,
+                        dataType: 'json',
+                        /*beforeSend: function(xhr) {
+                            xhr.withCredentials = true;
+                        },
+                        crossDomain: true,*/
+                        contentType: 'application/json; charset=UTF-8',
+                        success: function(res) {
+                            var data = res.data,
+                                time,
+                                start,
+                                end,
+                                aTime = [];
+                            data.items.forEach(function(val, index) {
+                                aTime.push(JSON.parse(val.extContent).start_time);
+                                start = that.secondToTime(JSON.parse(val.extContent).start_time);
+                                end = that.secondToTime(JSON.parse(val.extContent).end_time);
+
+                                val.monthDate = (start.month) + '月' + (start.date) + '日';
+                                val.hourMinute = (start.hour) + ':' + (start.minute) + '-' + (end.hour) + ':' + (end.minute);
+                                val.videoUrl = JSON.parse(val.extContent).videoUrl;
+                                val.mainUser = JSON.parse(JSON.parse(val.extContent).guests)[0].name;
+
+                                var title = val.title;
+                                if(title.length > 17){
+                                    title = title.substr(0,17) + '...';
+                                }
+                                val.title = title;
+                                //  取最大值，最小值
+                            })
+                            var _standard = aTime[0],
+                                _min,
+                                _max;
+                            aTime.forEach(function(val,index){
+                                _min = val < _standard ? val : _standard;
+                                _max = val > _standard ? val : _standard;
+                            })
+                            var min = that.secondToTime(_min),
+                                max = that.secondToTime(_max);
+                            data.min = min.month + '月' + min.date + '日';
+                            data.max = max.month + '月' + max.date + '日';
+                            that.info = data;
+                            that.requestId = res.requestId;
+                        },
+                        error: function(res) {
+                            console.log(res.message)
+                        }
+                    })
+                }
+            },
+            mounted: function() {
+                this.getData();
+            }
+        })
+    })
+    </script>
+</body>
+
+</html>
