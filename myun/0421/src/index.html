@@ -9,18 +9,18 @@
     <meta name="format-detection" content="telephone=no, email=no" />
     <meta name="viewport" content="minimal-ui, width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
     <title>直播预告页面</title>
-    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="styles/index.css"> 
     <script src="scripts/jquery.min.js"></script>
     <script src="scripts/vue.min.js"></script>
-    <script src="scripts/index.js"></script>
+    <script src="scripts/index.js"></script> 
 </head>
 
-<body>
+<body> 
     <div class="wrap" id="wrapper" :data-id="requestId">
         <header>
             <span class="share"><img src="/myun/0421/src/images/H5_04.png" alt=""></span>
             <span class="order">第一期</span>
-            <span class="date-range">直播时间：4月24日-4月28日</span>
+            <span class="date-range">直播时间：{{info.min}}-{{info.max}}</span>
             <img src="/myun/0421/src/images/H5_01.png" alt="">
         </header>
         <div class="main">
@@ -98,23 +98,36 @@
                             var data = res.data,
                                 time,
                                 start,
-                                end;
+                                end,
+                                aTime = [];
                             data.items.forEach(function(val, index) {
-                                time = that.secondToTime(val.ctime);
+                                aTime.push(JSON.parse(val.extContent).start_time);
                                 start = that.secondToTime(JSON.parse(val.extContent).start_time);
                                 end = that.secondToTime(JSON.parse(val.extContent).end_time);
 
-                                val.monthDate = (time.month + 1) + '月' + (time.date) + '日';
-                                val.hourMinute = (start.hour) + ':' + (start.minute) + '-' + (end.hour + 1) + ':' + (end.minute);
+                                val.monthDate = (start.month) + '月' + (start.date) + '日';
+                                val.hourMinute = (start.hour) + ':' + (start.minute) + '-' + (end.hour) + ':' + (end.minute);
                                 val.videoUrl = JSON.parse(val.extContent).videoUrl;
                                 val.mainUser = JSON.parse(JSON.parse(val.extContent).guests)[0].name;
 
                                 var title = val.title;
-                                if(title.length > 20){
-                                    title = title.substr(0,15) + '...';
+                                if(title.length > 17){
+                                    title = title.substr(0,17) + '...';
                                 }
                                 val.title = title;
+                                //  取最大值，最小值
                             })
+                            var _standard = aTime[0],
+                                _min,
+                                _max;
+                            aTime.forEach(function(val,index){
+                                _min = val < _standard ? val : _standard;
+                                _max = val > _standard ? val : _standard;
+                            })
+                            var min = that.secondToTime(_min),
+                                max = that.secondToTime(_max);
+                            data.min = min.month + '月' + min.date + '日';
+                            data.max = max.month + '月' + max.date + '日';
                             that.info = data;
                             that.requestId = res.requestId;
                         },

@@ -88,6 +88,8 @@
             alias: '',
             //  默认项
             defaultOption: '',
+            //  默认选中项
+            selected: '',
             //  所需数据参数
             params: {
                 name: "name",
@@ -149,20 +151,20 @@
         };
         //  数据处理
         Select.prototype.dealData = function(res) {
-                //  给最后一层数据
-                var self = this,
-                    renderData = [];
-                $.each(res, function(index, val) {
-                    var item = {
-                        name: val[self.params.name],
-                        id: val[self.params.id]
-                    };
-                    renderData.push(item);
-                })
-                renderData.unshift(self.defaultItem);
-                return renderData;
-            }
-            //  渲染 
+            //  给最后一层数据
+            var self = this,
+                renderData = [];
+            $.each(res, function(index, val) {
+                var item = {
+                    name: val[self.params.name],
+                    id: val[self.params.id]
+                };
+                renderData.push(item);
+            })
+            renderData.unshift(self.defaultItem);
+            return renderData;
+        };
+        //  渲染 
         Select.prototype.render = function(data) {
             var self = this;
             Utils.requireTpl('select', function(tpl) {
@@ -205,14 +207,14 @@
             self.submitBtn = $(self.submitBtn);
         };
         //  初始化插件
-        Form.prototype.initPlug = function(){
+        Form.prototype.initPlug = function() {
             var self = this;
             var rules = self.validate.rules,
                 messages = self.validate.messages;
             self.validateFunc = self.$container.validate({
                 rules: rules,
                 messages: messages,
-                errorPlacement: function(error,element){
+                errorPlacement: function(error, element) {
                     error.appendTo(element.parent());
                 }
             })
@@ -233,7 +235,7 @@
                 self.$container.valid();
                 var _aError = $('.error');
                 var error = self.error(_aError);
-                if(error){
+                if (error) {
                     return;
                 }
                 //  获取文本值
@@ -264,22 +266,22 @@
                 return false;
             })
         }
-        Form.prototype.initValidate = function(){
+        Form.prototype.initValidate = function() {
             var self = this;
             /*
              *  value：元素值，element，元素本身，param：参数
-            */
-            $.validator.addMethod('phone',function(value,element,params){
+             */
+            $.validator.addMethod('phone', function(value, element, params) {
                 var reg = /[\d]/;
                 return reg.test(value);
-            },'电话号码不能输入数字');
+            }, '电话号码不能输入数字');
         }
-        Form.prototype.error = function(errorEl){
+        Form.prototype.error = function(errorEl) {
             var self = this,
                 _error = false;
-            errorEl.each(function(index,ele){
+            errorEl.each(function(index, ele) {
                 var _text = $(ele).text();
-                if(_text){
+                if (_text) {
                     _error = true;
                     return false;
                 }
