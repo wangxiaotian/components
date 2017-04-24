@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+  
 <head>
     <meta charset="UTF-8">
     <title>文本输入组件</title>
@@ -9,7 +9,7 @@
     <script src="/lib/js/bootstrap.min.js"></script>
     <script src="/lib/js/jquery.validate.min.js"></script>
     <script src="/lib/js/doT.js"></script>
-    <script src="/lib/util.js"></script>
+    <script src = "/dest/test.js"></script>
     <script src="../popup/popup.js"></script>
     <script src="input.js"></script>
     <style>
@@ -106,7 +106,7 @@
                 <input type="tel" name="phone" class="text3" data-placeholder="请输入电话" data-alias="电话">
                 <input type="email" name="email" class="text4" data-placeholder="请输入邮箱" data-alias="邮箱">
                 <input type="password" name="pwd" class="text5" data-placeholder="请输入密码" data-alias="密码">
-                <input type="text" class="text6" data-placeholder="请输入姓名" name = "company" data-alias="公司">
+                <input type="text" class="text6" data-placeholder="请输入姓名" name="company" data-alias="公司">
                 <input type="text" class="text7" data-placeholder="请输入姓名" data-alias="用户名">
                 <input type="text" class="text8" data-placeholder="请输入姓名" data-alias="用户名">
             </form>
@@ -115,19 +115,29 @@
             <div class="col-xs-offset-4"></div>
             <div class="col-xs-1">
                 <button class="btn btn-primary btn-block form-btn">提交</button>
-            </div>
-        </div>
-        <div class="row">
+            </div>  
+        </div>  
+        <div class="row"> 
             <div class="col-xs-12">
                 <h3>编辑</h3>
                 <div class="col-xs-3">
-                    <input type="text" class="editSelect" data-alias = "编辑">
+                    <input type="text" class="editSelect" data-alias="编辑">
                 </div>
             </div>
         </div>
     </div>
     <script>
-    $(function() {
+        $(function(){
+            promise('api/select.json').then(function(res){
+                var res = res.code;
+                return promise('api/select2.json')
+            }).then(function(res){
+                alert(res.message)
+            })
+        })
+    </script>
+    <script>
+    /*$(function() {
         document.cookie = 'name = test';
         console.log(document.cookie);
         //  初始化文本输入
@@ -222,23 +232,23 @@
         });
         //  编辑下拉框初始化
         xxinput.initSelect({
-            container: '.editSelect',
-            length: 8,
-            labelLength: 2,
-            dataSource: {
-                url: 'api/select.json'
-            },
-            defaultOption: '请选择编辑',
-            dataCallback: function(res) {
-                var data = res.data.companies;
-                return data;
-            },
-            params: {
-                name: "name",
-                id: "id"
-            }
-        })
-        //  初始化表单
+                container: '.editSelect',
+                length: 8,
+                labelLength: 2,
+                dataSource: {
+                    url: 'api/select.json'
+                },
+                defaultOption: '请选择编辑',
+                dataCallback: function(res) {
+                    var data = res.data.companies;
+                    return data;
+                },
+                params: {
+                    name: "name",
+                    id: "id"
+                }
+            })
+            //  初始化表单
         xxinput.initForm({
             container: '.form1',
             action: 'api/select.json',
@@ -335,7 +345,7 @@
                 // window.location.href = '/table'
             }
         });
-    })
+    })*/
     </script>
 </body>
 

@@ -8,6 +8,7 @@ var revCollector = require('gulp-rev-collector');
 var minifyHTML   = require('gulp-minify-html');
 var rev = require('gulp-rev');
 var replace = require('gulp-replace');
+var babel = require('gulp-babel');
 //	启动服务
 gulp.task('connect',function(){
 	connect.server({
@@ -61,7 +62,7 @@ gulp.task('watch-less',function(){
 })
 //	js编译
 gulp.task('js',function(){
-	gulp.src('./scripts/*.js')
+	gulp.src('./lib/*.js')
 	.pipe(through2.obj(function(file,enc,next){
 		browserify(file.path,{
 			debug: false
@@ -78,8 +79,8 @@ gulp.task('js',function(){
 			}
 		})
 	}))
-	.pipe(uglify())
-	.pipe(gulp.dest('./dest/scripts'))
+	.pipe(babel())
+	.pipe(gulp.dest('./dest'))
 })
 
 gulp.task('rev',function(){
@@ -103,9 +104,13 @@ gulp.task('replace',function(){
 	.pipe(replace('css/table.css','dest/dist/css/table.css'))
 	.pipe(gulp.dest('./bulid/'))
 })
-
+gulp.task('default',function(){
+	return gulp.src('./lib/*.js')
+				.pipe(babel())
+				.pipe(gulp.dest('./dest'));
+})
 gulp.task('watch',function(){
-	gulp.watch(['./**/*.html'],['html','watch-less'])
+	gulp.watch(['./**/*.html'],['html','watch-less','js'])
 })
 
-gulp.task('server',['connect','watch']);
+gulp.task('server',['connect','watch','js']);
