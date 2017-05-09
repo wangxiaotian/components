@@ -17,6 +17,9 @@ html body .xxprogress .progress-line {
   left: 0px;
   background: #ccc;
   border-radius: 1000px;
+  background: #cccccc;
+  height: 4px;
+  width: 300px;
 }
 html body .xxprogress .progress-line-active {
   display: inline-block;
@@ -25,12 +28,20 @@ html body .xxprogress .progress-line-active {
   position: absolute;
   left: 0;
   top: 0px;
+  background: #177ad8;
+  height: 4px;
 }
 html body .xxprogress .progress-towage {
   display: inline-block;
   border-radius: 1000px;
   cursor: pointer;
   position: absolute;
+  background: #177ad8;
+  width: 16px;
+  height: 16px;
+  left: 0px;
+  box-shadow: #177ad8 0px 0px 5px;
+  top: -6px;
 }
 html body .xxprogress .xx-percent {
   display: inline-block;
@@ -42,4 +53,5 @@ html body .xxprogress .xx-percent {
   color: black;
   text-align: center;
   outline: none;
+  top: -9px;
 }

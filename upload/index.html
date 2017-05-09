@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
- 
-<head>  
+
+<head>
     <meta charset="UTF-8">
     <title>upload</title>
     <link rel="stylesheet" href="/lib/css/bootstrap.min.css">
@@ -9,26 +9,26 @@
     <script src="/lib/js/jquery.min.js"></script>
     <script src="/lib/js/bootstrap.min.js"></script>
     <script src="/lib/util.js"></script>
-    <script src = "upload.js"></script>
+    <script src="upload.js"></script>
 </head>
 
-<body> 
-    <div class="container">  
+<body>
+    <div class="container">
         <div class="row">
             <div class="col-xs-12">
-                <h3>文件上传</h3> 
+                <h3>文件上传</h3>
             </div>
         </div>
-        <div class="row"> 
+        <div class="row">
             <div class="col-xs-6">
                 <div class="upload">
                     <div class="file-list">
                         <div class="list">
-                        	<div class="img-info">
-                        		<span class="img-name">4sd04.png</span>
-                        		<span class="img-delete"><i>X</i></span>
-                        		<span class="complete">上传成功</span>
-                        	</div>
+                            <div class="img-info">
+                                <span class="img-name">4sd04.png</span>
+                                <span class="img-delete"><i>X</i></span>
+                                <span class="complete">上传成功</span>
+                            </div>
                             <img src="../lib/img/404-error.png" alt="">
                         </div>
                         <div class="list">
@@ -58,14 +58,14 @@
                             </div>
                         </div>
                         <div class="pick-upload btn btn-default">上传图片</div>
-                    </div> 
-                </div>  
+                    </div>
+                </div>
             </div>
-        </div> 
+        </div>
         <div class="row">
-        	<div class="col-xs-4">
-        		<div class="upload1"></div>
-        	</div>
+            <div class="col-xs-4">
+                <div class="upload1"></div>
+            </div>
         </div>
         <div class="row">
             <div class="col-xs-4">
@@ -73,18 +73,30 @@
             </div>
         </div>
     </div>
+    <button id="testa">test</button>
     <script>
-    	$(function(){
-    		var a = xxupload.init({
-    			container: '.upload1',
-                name: 'file',
-                data: {name: 'nihao'},
-    		})
-            $('.submit').on('click',function(){
-                var getfile = a.getFile;
-                alert(getfile);
-            })
-    	})
+    $(function() {
+        var a = xxupload.init({
+            container: '.upload1',
+            name: 'file',
+            data: {
+                name: 'nihao'
+            },
+        })
+        $('.submit').on('click', function() {
+            var getfile = a.getFile;
+            alert(getfile);
+        })
+    })
+    $('#testa').on('click', function() {
+        
+        var a = {
+            a: 1
+        };
+        for (key in a) {
+            alert(key);
+        }
+    })
     </script>
 </body>
 

@@ -10,7 +10,7 @@
             //  name值
             name: '',
             //  label名
-            alias: '',
+            alias: '', 
             //  占位值
             placeholder: '',
             //  后缀
@@ -416,7 +416,6 @@
                     }
 
                 }
-
             })
         };
         //  renderNext

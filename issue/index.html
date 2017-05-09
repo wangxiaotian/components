@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>issue</title>
+</head>
+
+<body>
+    <input type="text" id="test">
+    <p id="testP">你输入的是：</p>
+    <script>
+    window.onload = function() {
+        var inp = document.querySelector('#test'),
+            oP = document.querySelector('#testP');
+        var val,
+            obj = {};
+        Object.defineProperty(obj, 'testValue', {
+            get: function() {
+                console.log('get:' + testValue);
+                return testValue;
+            },
+            set: function(value) {
+                console.log('aa');
+                oP.innerHTML = '你输入的是：' + value;
+            }
+        })
+        inp.onkeyup = function() {
+        	obj.testValue = this.value;
+        }
+
+    }
+    </script>
+</body>
+
+</html>

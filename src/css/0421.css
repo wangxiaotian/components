@@ -184,13 +184,13 @@ body .wrap .main .main-list .item .title {
   position: relative;
 }
 body .wrap .main .main-list .item .title span {
-  width: 100%;
+  width: 94%;
   position: absolute;
   display: inline-block;
   top: 50%;
   transform: translate(-50%, -50%);
   text-align: left;
-  margin-left: 0.2rem;
+  margin-left: 3%;
 }
 body .wrap .main .main-list .item .author {
   width: 2.45rem;

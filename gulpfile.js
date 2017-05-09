@@ -110,7 +110,7 @@ gulp.task('default',function(){
 				.pipe(gulp.dest('./dest'));
 })
 gulp.task('watch',function(){
-	gulp.watch(['./**/*.html'],['html','watch-less','js'])
+	gulp.watch(['./**/*.html'],['html','watch-less','js','less'])
 })
 
 gulp.task('server',['connect','watch','js']);

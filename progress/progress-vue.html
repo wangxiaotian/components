@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/lib/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/src/css/progress.css">
+    <title>进度条</title>
+    <script src="/lib/js/jquery.min.js"></script>
+    <script src="/lib/js/vue.min.js"></script>
+</head>
+
+<body style="margin:0 100px;">
+    <h3>progress</h3>
+    <div id="app">
+        <h5>{{msg}}</h5>
+        <xx-progress :width="width"></xx-progress>
+    </div>
+    <script>
+    $(function() {
+        Vue.component('xx-progress', {
+            template: '<div class="xxprogress">\
+					        <p class="progress-line" :style = "widthStl"></p>\
+					        <p class="progress-line-active"></p>\
+					        <span class="progress-towage" :style = "moveWStl" @mousedown = "mousedown"></span>\
+					        <span class="xx-percent">{{percent}}%</span>\
+					    </div>',
+            props: ['width'],
+            data: function() {
+                return {
+                    leftD: 20,
+                    leftActive: 20,
+                    start: 0,
+                    isDrag: false,
+                    half: 8
+                }
+            },
+            computed: {
+                widthStl: function() {
+                    return {
+                        width: this.width + 'px'
+                    }
+                },
+                moveWStl: function() {
+                    return {
+                        left: (this.leftActive - 8) + 'px'
+                    }
+                },
+                percent: function(){
+                	var raw = this.leftActive/this.width;
+                	var decimal = Math.round(raw*100);
+                	return decimal;
+                }
+            },
+            methods: {
+            	initStatus: function(){
+            		var that = this;
+            		$('body').on('mousemove', function(event) {
+                        if (!that.isDrag) return;
+                        var _x = event.clientX,
+                        	dis = _x - that.start + that.leftD;
+                        that.leftActive = dis >= 300 ? 300 : dis <= 0 ? 0 : dis;
+                    })
+                    $('body').on('mouseup', function() {
+                        that.isDrag = false;
+                        that.leftD = that.leftActive;
+                    })
+            	},
+                mousedown: function(event) {
+                    var $el = $(event.target);
+                    this.isDrag = true;
+                    this.start = event.clientX;
+                }
+            },
+            mounted: function() {
+            	this.initStatus();
+            }
+        })
+        new Vue({
+            el: '#app',
+            data: {
+                msg: 'here',
+                width: 300
+            }
+        })
+    })
+    </script>
+</body>
+
+</html>
