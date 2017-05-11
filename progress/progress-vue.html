@@ -14,8 +14,22 @@
     <h3>progress</h3>
     <div id="app">
         <h5>{{msg}}</h5>
-        <xx-progress :width="width"></xx-progress>
+        <!-- <xx-progress :width="width"></xx-progress> -->
+        <button style = "margin-top:30px;" @click = "add">添加组件</button>
+        <button style = "margin-top:30px;" @click = "reduce">删除组件</button>
+        <button style = "margin-top:30px;" @click = "test">输出</button>
+        <button style = "margin-top: 30px" @click = "change">改变状态</button>
+        <div v-for = "n in arr">
+        	<p>添加</p>
+        	<xx-progress :progress = "progress"></xx-progress>
+        </div>
     </div>
+
+    <!-- <div id = "app">
+    	<xx-progress ref= "a" :width="width"></xx-progress>
+    	<xx-progress ref = "b" :width="width"></xx-progress> 	//	通过事件触发再添加一个模板，这个时候新添加的模板就不能渲染了
+    </div> -->
+
     <script>
     $(function() {
         Vue.component('xx-progress', {
@@ -25,17 +39,20 @@
 					        <span class="progress-towage" :style = "moveWStl" @mousedown = "mousedown"></span>\
 					        <span class="xx-percent">{{percent}}%</span>\
 					    </div>',
-            props: ['width'],
+            props: ['progress'],
             data: function() {
                 return {
-                    leftD: 20,
-                    leftActive: 20,
-                    start: 0,
+                	width: this.progress.width,
+                	/*selfPercent: this.progress.initpercent,*/
+                    start: (this.progress.initpercent/100)*this.width,
                     isDrag: false,
                     half: 8
                 }
             },
             computed: {
+            	leftActive: function(){
+                	return this.progress.initpercent/100 * this.width
+                },
                 widthStl: function() {
                     return {
                         width: this.width + 'px'
@@ -43,13 +60,16 @@
                 },
                 moveWStl: function() {
                     return {
-                        left: (this.leftActive - 8) + 'px'
+                        left: (this.leftActive - this.half) + 'px'
                     }
                 },
                 percent: function(){
                 	var raw = this.leftActive/this.width;
                 	var decimal = Math.round(raw*100);
                 	return decimal;
+                },
+                leftD: function(){
+                	return (this.progress.leftd/100) * this.width
                 }
             },
             methods: {
@@ -59,11 +79,13 @@
                         if (!that.isDrag) return;
                         var _x = event.clientX,
                         	dis = _x - that.start + that.leftD;
-                        that.leftActive = dis >= 300 ? 300 : dis <= 0 ? 0 : dis;
+                        /*that.leftActive = dis >= 300 ? 300 : dis <= 0 ? 0 : dis;*/
+                        disWidth = dis >= that.width ? that.width : dis <= 0 ? 0 : dis;
+                        that.progress.initpercent = (disWidth/(that.width))*100;
                     })
                     $('body').on('mouseup', function() {
                         that.isDrag = false;
-                        that.leftD = that.leftActive;
+                        that.leftD = (that.progress.initpercent/100)*(that.width);
                     })
             	},
                 mousedown: function(event) {
@@ -76,11 +98,31 @@
             	this.initStatus();
             }
         })
-        new Vue({
+        var vm = new Vue({
             el: '#app',
             data: {
                 msg: 'here',
-                width: 300
+                progress: {
+                	width: 300,
+                	initpercent: '50',
+                	leftd: '50'
+                },
+                arr:[1]
+            },
+            methods:{
+            	add: function(){
+            		this.arr.push(1);
+            	},
+            	reduce: function(){
+            		this.arr.pop()
+            	},
+            	test: function(){
+            		alert(this.initpercent.percent)
+            	},
+            	change: function(){
+            		this.progress.initpercent = 20;
+            		this.progress.leftd = 20;
+            	}
             }
         })
     })
