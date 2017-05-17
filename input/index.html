@@ -5,9 +5,11 @@
     <meta charset="UTF-8">
     <title>文本输入组件</title>
     <link rel="stylesheet" href="/lib/css/bootstrap.min.css">
+    
     <script src="/lib/js/jquery.min.js"></script>
     <script src="/lib/js/bootstrap.min.js"></script>
     <script src="/lib/js/jquery.validate.min.js"></script>
+    <script src = "/lib/util.js"></script>
     <script src="/lib/js/doT.js"></script>
     <script src = "/dest/test.js"></script>
     <script src="../popup/popup.js"></script>
@@ -126,7 +128,7 @@
             </div>
         </div>
     </div>
-    <script>
+    <!-- <script>
         $(function(){
             promise('api/select.json').then(function(res){
                 var res = res.code;
@@ -135,9 +137,9 @@
                 alert(res.message)
             })
         })
-    </script>
+    </script> -->
     <script>
-    /*$(function() {
+    $(function() {
         document.cookie = 'name = test';
         console.log(document.cookie);
         //  初始化文本输入
@@ -345,7 +347,7 @@
                 // window.location.href = '/table'
             }
         });
-    })*/
+    })
     </script>
 </body>
 

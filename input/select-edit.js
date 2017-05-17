@@ -1,6 +1,6 @@
-(function(){
-	var XXinput = {};
-	//  下拉选择框
+(function() {
+    var XXinput = {};
+    //  下拉选择框
     (function() {
         var Select = XXinput.Select = function() {};
         Select.prototype.configuration = {
@@ -54,13 +54,19 @@
             var _html = '<div class = "form-group">\
                             <label class = "control-label col-xs-' + self.labelLength + '">' + self.alias + '</label>\
                             <div class = "col-xs-' + self.length + '">\
-                                <select class = "form-control" name = "' + self.name + '">\
-                                </select>\
+                            	<div class="col-xs-12" style = "padding:0">\
+                            		<input class = "form-control" type="text" name = "' + self.name + '" placeholder = "' + self.defaultOption + '" />\
+                            	</div>\
+                            	<div class="col-xs-12">\
+									<ul class = "dropdown-menu">\
+									</ul>\
+                            	</div>\
                             </div>\
                         </div>';
             var _selectHtml = $(_html);
             self.$container.replaceWith(_selectHtml);
-            self.$select = _selectHtml.find('select');
+            self.$input = _selectHtml.find('input');
+            self.$ul = _selectHtml.find('ul');
         };
         //  获取数据
         Select.prototype.getData = function() {
@@ -76,7 +82,9 @@
                 Utils.getData(url, data, function(res) {
                     var data = self.dataCallback(res);
                     var renderData = self.dealData(data);
+                    self.renderData = renderData;
                     self.render(renderData);
+                    self.event(renderData);
                 })
             }
         };
@@ -92,7 +100,7 @@
                 };
                 renderData.push(item);
             })
-            renderData.unshift(self.defaultItem);
+            /*renderData.unshift(self.defaultItem);*/
             return renderData;
         };
         //  渲染 
@@ -102,12 +110,82 @@
                 Utils.render({
                     data: data,
                     tpl: tpl,
-                    container: self.$select
+                    container: self.$ul
                 })
             })
         };
+        Select.prototype.event = function(){
+        	var self = this;
+        	inputQuery(self.renderData,self.$input,self.$ul,{
+        		filter: function(val){
+        			return val.name
+        		},
+        		str: function(val){
+		            return '<li value = "' + val.id + '"><a href="javascript:;">' + val.name + '</a></li>';
+		        }
+        	})
+        }
+        function inputQuery(data, input, ul, oRender, interval) {
+            var $input = $(input),
+                $ul = $(ul),
+                timer,
+                interval = interval || 100,
+                me = $(this);
+
+            function getKey() {
+                return $input.val();
+            };
+
+            function render() {
+                var key = getKey(),
+                    str = '';
+                $.each(data, function(index, val) {
+                    if (!(oRender.filter(val).match(key))) return true;
+                    str += oRender.str(val);
+                })
+                $ul.empty();
+                $ul.append(str);
+                $ul.css({
+                    'display': 'block'
+                })
+            }
+            //  获取焦点
+            $input.on('focus', function() {
+
+                render();
+            });
+            //  关键字查询,过滤数据
+
+            $input.on('input', function() {
+                    if (timer) return;
+                    timer = setTimeout(function() {
+                        render();
+                        clearTimeout(timer);
+                        timer = null;
+                    }, interval)
+                })
+                //  选中
+            $ul.on('click', 'li', function() {
+                    var id = $(this).attr('data-alias'),
+                        text = $(this).text();
+                    $input.val(text);
+                    $input.attr('data-id', id);
+                    $ul.css({
+                        'display': 'none'
+                    })
+                })
+                //  隐藏
+            $('*').on('click', function(event) {
+                var target = event.target,
+                    tc = target.localName;
+                if (tc == 'input' || tc == 'li') return;
+                $ul.css({
+                    'display': 'none'
+                })
+            });
+        }
     })();
-	window.xxinput = {
+    window.xxinput = {
         initSelect: function(options) {
             var select = new XXinput.Select();
             select.init(options);
