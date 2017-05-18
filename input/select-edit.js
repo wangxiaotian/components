@@ -11,6 +11,8 @@
                 url: '',
                 params: {}
             },
+            //  是否显示label
+            showLabel: false,
             //  label长度
             labelLength: '',
             //  选择框长度
@@ -21,15 +23,41 @@
             defaultOption: '',
             //  默认选中项
             selected: '',
-            //  所需数据参数
+            //  渲染所需数据参数
             params: {
                 name: "name",
                 id: "id"
             },
+            /**
+             * 请求接口附加参数
+             * @type {Object}
+             */
+            reqParams: {
+
+            },
+            /**
+             * 数据处理回调
+             * @param  {JSON} res 接口请求源数据
+             * @return {JSON}     处理后的数据
+             */
             dataCallback: function(res) {
-                console.log('后台返回数据格式不能直接使用，需要自己配置数据格式并返回');
-                var data = res.data;
-                return data;
+                
+            },
+            /**
+             * 触发选中调用
+             * @param  {JQElement} obj 选中选项元素节点
+             * @return 
+             */
+            trigger: function(obj) {
+
+            },
+            /**
+             * 渲染后调用
+             * @param  {JQElement} input input元素节点
+             * @return {[type]}       [description]
+             */
+            afterRender: function(input){
+
             }
         };
         Select.prototype.init = function(options) {
@@ -51,8 +79,9 @@
         };
         Select.prototype.initFrame = function() {
             var self = this;
+            var isShowLabel = self.showLabel ? '' : 'hide';
             var _html = '<div class = "form-group">\
-                            <label class = "control-label col-xs-' + self.labelLength + '">' + self.alias + '</label>\
+                            <label class = "control-label ' + isShowLabel + ' col-xs-' + self.labelLength + '">' + self.alias + '</label>\
                             <div class = "col-xs-' + self.length + '">\
                             	<div class="col-xs-12" style = "padding:0">\
                             		<input class = "form-control" type="text" name = "' + self.name + '" placeholder = "' + self.defaultOption + '" />\
@@ -84,7 +113,8 @@
                     var renderData = self.dealData(data);
                     self.renderData = renderData;
                     self.render(renderData);
-                    self.event(renderData);
+                    self.event(self.trigger);
+                    self.afterRender(self.$input)
                 })
             }
         };
@@ -114,7 +144,7 @@
                 })
             })
         };
-        Select.prototype.event = function(){
+        Select.prototype.event = function(trigger){
         	var self = this;
         	inputQuery(self.renderData,self.$input,self.$ul,{
         		filter: function(val){
@@ -123,9 +153,9 @@
         		str: function(val){
 		            return '<li value = "' + val.id + '"><a href="javascript:;">' + val.name + '</a></li>';
 		        }
-        	})
+        	},100,trigger)
         }
-        function inputQuery(data, input, ul, oRender, interval) {
+        function inputQuery(data, input, ul, oRender, interval,trigger) {
             var $input = $(input),
                 $ul = $(ul),
                 timer,
@@ -135,7 +165,12 @@
             function getKey() {
                 return $input.val();
             };
-
+            function isShow(JQEl,show){
+                var _show = show ? 'block' : 'none';
+                JQEl.css({
+                    'display': _show
+                })
+            }
             function render() {
                 var key = getKey(),
                     str = '';
@@ -145,13 +180,11 @@
                 })
                 $ul.empty();
                 $ul.append(str);
-                $ul.css({
-                    'display': 'block'
-                })
+                isShow($ul,true)
             }
             //  获取焦点
             $input.on('focus', function() {
-
+            	isShow($ul,true)
                 render();
             });
             //  关键字查询,过滤数据
@@ -166,22 +199,19 @@
                 })
                 //  选中
             $ul.on('click', 'li', function() {
-                    var id = $(this).attr('data-alias'),
+                    var id = $(this).attr('value'),
                         text = $(this).text();
                     $input.val(text);
-                    $input.attr('data-id', id);
-                    $ul.css({
-                        'display': 'none'
-                    })
+                    $input.attr('value', id);
+                    isShow($ul,false)
+                    trigger($(this));
                 })
                 //  隐藏
             $('*').on('click', function(event) {
                 var target = event.target,
                     tc = target.localName;
                 if (tc == 'input' || tc == 'li') return;
-                $ul.css({
-                    'display': 'none'
-                })
+                isShow($ul,false)
             });
         }
     })();
