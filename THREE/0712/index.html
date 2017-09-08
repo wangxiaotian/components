@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>THREE</title>
+	<script type = "text/javascript" src = "three.js"></script>
+	<style>
+		canvas{
+			width:100%;
+			height:100%;
+		}
+	</style>
+</head>
+<body>
+	<!-- <h3>THREE</h3> -->
+	<script>
+		window.onload = function(){
+			//	场景
+			var scene = new THREE.Scene();
+			//	透镜相机
+			var camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+			//	渲染器
+			var renderer = new THREE.WebGLRenderer();
+			//	画布尺寸
+			renderer.setSize(window.innerWidth,window.innerHeight);
+			//	添加画布到dom
+			document.body.appendChild(renderer.domElement);
+			//	定义形状
+			var geometry = new THREE.CubeGeometry(1,0.5,1);
+			//	定义材质
+			var material = new THREE.MeshBasicMaterial({
+				color: 0x00ff00
+			});
+			//	构成几何体
+			var cube = new THREE.Mesh(geometry,material);
+			//	添加到场景
+			scene.add(cube);
+			camera.position.z = 80;
+			var s = 0;
+			function render(){
+				/*requestAnimationFrame(render); */
+				//	定义行为
+				/*cube.rotation.y += 0.1;*/
+				s-=1
+				if(s <= 1) s = 80;
+				camera.position.z = s;
+				console.log(s)
+				cube.rotation.z += 1;
+				/*cube.rotation.y += 0.01;*/
+				/*cube.rotation.z += 0.01;*/
+				//	渲染
+				renderer.render(scene,camera);
+			}
+			setInterval(function(){
+				render();
+			},10)
+			
+		}
+	</script>
+</body>
+</html>
